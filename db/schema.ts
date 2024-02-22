@@ -2,6 +2,8 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 export const userTable = sqliteTable("user", {
   id: text("id").primaryKey().notNull(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
 });
 
 export const sessionTable = sqliteTable("session", {

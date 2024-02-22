@@ -5,7 +5,7 @@
     <UContainer
       :ui="{
         base: 'flex justify-between',
-        padding: 'py-2',
+        padding: 'py-4',
         constrained: 'max-w-full',
       }"
     >
