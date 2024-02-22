@@ -1,4 +1,5 @@
-import { verifyRequestOrigin, type Session, type User } from "lucia";
+import { type Session, type User, verifyRequestOrigin } from "lucia";
+
 import { lucia } from "../utils/auth";
 
 export default defineEventHandler(async (event) => {
@@ -42,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
 declare module "h3" {
   interface H3EventContext {
-    user: User | null;
     session: Session | null;
+    user: User | null;
   }
 }

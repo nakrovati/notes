@@ -1,10 +1,11 @@
+import { LibsqlError } from "@libsql/client";
+import { sql } from "drizzle-orm";
+import { generateId } from "lucia";
 import { Argon2id } from "oslo/password";
+import { custom, email, forward, object, parse, string } from "valibot";
+
 import { db } from "~/db";
 import { userTable } from "~/db/schema";
-import { LibsqlError } from "@libsql/client";
-import { string, object, parse, email, forward, custom } from "valibot";
-import { generateId } from "lucia";
-import { sql } from "drizzle-orm";
 
 const insertUser = db
   .insert(userTable)

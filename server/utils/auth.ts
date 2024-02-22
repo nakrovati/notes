@@ -1,7 +1,7 @@
-import { Lucia } from "lucia";
 import { db } from "@/db";
-import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { sessionTable, userTable } from "@/db/schema";
+import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
+import { Lucia } from "lucia";
 
 const adapter = new DrizzleSQLiteAdapter(db, sessionTable, userTable);
 

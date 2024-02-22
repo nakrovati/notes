@@ -1,6 +1,7 @@
 import { eq, sql } from "drizzle-orm";
 import { Argon2id } from "oslo/password";
-import { email, string, parse, object } from "valibot";
+import { email, object, parse, string } from "valibot";
+
 import { db } from "~/db";
 import { userTable } from "~/db/schema";
 

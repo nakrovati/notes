@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import {
-  string,
-  objectAsync,
-  email,
-  minLength,
-  type Input,
-  maxLength,
-} from "valibot";
 import type { Form, FormSubmitEvent } from "#ui/types";
+
+import {
+  type Input,
+  email,
+  maxLength,
+  minLength,
+  objectAsync,
+  string,
+} from "valibot";
 
 const errorToast = useToast();
 
