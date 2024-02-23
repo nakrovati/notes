@@ -24,3 +24,5 @@ export const notesTable = sqliteTable("notes", {
     .references(() => userTable.id, { onDelete: "cascade" }),
   createdAt: integer("created_at").notNull(),
 });
+
+export type User = typeof userTable.$inferSelect;

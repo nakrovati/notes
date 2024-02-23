@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { sessionTable, userTable } from "@/db/schema";
+import { User, sessionTable, userTable } from "@/db/schema";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { Lucia } from "lucia";
 
@@ -11,10 +11,16 @@ export const lucia = new Lucia(adapter, {
       secure: !import.meta.dev,
     },
   },
+  getUserAttributes: (attributes) => {
+    return {
+      email: attributes.email,
+    };
+  },
 });
 
 declare module "lucia" {
   interface Register {
+    DatabaseUserAttributes: Omit<User, "id">;
     Lucia: typeof lucia;
   }
 }
