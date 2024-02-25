@@ -1,17 +1,19 @@
 <script setup lang="ts">
-async function handleLogout() {
-  await $fetch("/api/logout", { method: "POST" });
-  await navigateTo("/login");
-}
+const { data: notes } = await useFetch("/api/notes");
 </script>
 
 <template>
-  <div>
-    <h1>Index Page!</h1>
-    <div>
-      <UButton variant="link" to="/signup">Sign up</UButton>
-      <UButton variant="link" to="/login">Login</UButton>
-      <UButton @click="handleLogout">Logout</UButton>
-    </div>
+  <div class="space-y-4">
+    <h1 class="text-center text-2xl">Your notes</h1>
+    <ul class="grid grid-cols-3 gap-x-4 gap-y-8">
+      <li v-for="note in notes" :key="note.id">
+        <NuxtLink :to="`/notes/${note.id}`">
+          <UCard>
+            <template #header>{{ note.title }}</template>
+          </UCard>
+        </NuxtLink>
+      </li>
+    </ul>
+    <UButton to="/notes/create">Create new note</UButton>
   </div>
 </template>
