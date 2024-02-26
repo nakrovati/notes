@@ -1,4 +1,0 @@
-{
-  "*.{js,cjs,ts,vue}": ["prettier -w", "eslint"],
-  "*.{html,md,yml,yaml,json}": ["prettier -w"]
-}
