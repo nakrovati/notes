@@ -35,21 +35,27 @@ const items = [
       <NuxtLink v-if="$route.path !== '/'" to="/"> Notes </NuxtLink>
       <div v-else>Notes</div>
 
-      <TheColorThemeToggle />
+      <div class="flex gap-2">
+        <TheColorThemeToggle />
 
-      <UButton v-if="!user" variant="link" to="/login">Login</UButton>
-      <UDropdown v-else :items="items">
-        <UAvatar :alt="user.email"></UAvatar>
-
-        <template #account>
-          <div class="text-left">
-            <p>Signed in as</p>
-            <p class="truncate font-medium text-gray-900 dark:text-white">
-              {{ user.email }}
-            </p>
-          </div>
+        <template v-if="!user">
+          <UButton variant="link" to="/signup">Sign up</UButton>
+          <UButton to="/login">Login</UButton>
         </template>
-      </UDropdown>
+
+        <UDropdown v-else :items="items">
+          <UAvatar :alt="user.email"></UAvatar>
+
+          <template #account>
+            <div class="text-left">
+              <p>Signed in as</p>
+              <p class="truncate font-medium text-gray-900 dark:text-white">
+                {{ user.email }}
+              </p>
+            </div>
+          </template>
+        </UDropdown>
+      </div>
     </UContainer>
   </header>
 </template>
