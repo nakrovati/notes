@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare",
     "format": "prettier -w .",
     "lint": "eslint .",
-    "prepare": "husky"
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "nuxt": "^3.10.3",
@@ -31,7 +31,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-perfectionist": "^2.5.0",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
+    "lefthook": "^1.6.2",
     "lucia": "^3.0.1",
     "oslo": "^1.1.2",
     "prettier": "^3.2.5",
