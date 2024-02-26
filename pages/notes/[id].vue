@@ -23,6 +23,8 @@ noteState.title = note.value?.title!;
 noteState.content = note.value?.content!;
 
 async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
+  if (isNoteSaved.value) return;
+
   try {
     await $fetch(`/api/notes/${route.params.id}`, {
       method: "PATCH",
@@ -36,6 +38,8 @@ async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
   }
 }
 
+const isNoteSaved = ref(true);
+
 async function saveNote() {
   try {
     await $fetch(`/api/notes/${route.params.id}`, {
@@ -45,12 +49,20 @@ async function saveNote() {
         content: noteState.content,
       },
     });
+
+    isNoteSaved.value = true;
   } catch (error) {
     console.error(error);
   }
 }
 
 const debouncedAutoSaveNote = debounce(saveNote, 3000);
+
+function autoSaveNote() {
+  isNoteSaved.value = false;
+
+  debouncedAutoSaveNote();
+}
 
 const isModalOpen = ref(false);
 
@@ -73,12 +85,24 @@ async function handleDeleteNote() {
       @submit="handleSaveNote"
     >
       <UFormGroup name="title">
-        <div class="grid grid-cols-[1fr_auto] gap-4">
+        <div class="grid grid-cols-[1fr_auto_auto] gap-4">
           <UInput
             v-model="noteState.title"
             placeholder="Note title"
-            @update:model-value="debouncedAutoSaveNote"
+            @update:model-value="autoSaveNote"
           ></UInput>
+
+          <UTooltip :text="isNoteSaved ? 'Auto saved' : 'Auto saving'">
+            <UButton
+              :icon="
+                isNoteSaved
+                  ? 'i-heroicons-check-circle'
+                  : 'i-heroicons-arrow-path'
+              "
+              :loading="!isNoteSaved"
+              variant="outline"
+            />
+          </UTooltip>
 
           <UButton
             icon="i-heroicons-adjustments-vertical"
@@ -94,7 +118,7 @@ async function handleDeleteNote() {
           autoresize
           :rows="10"
           :maxrows="20"
-          @update:model-value="debouncedAutoSaveNote"
+          @update:model-value="autoSaveNote"
       /></UFormGroup>
 
       <UButton type="submit">Save note</UButton>
