@@ -11,6 +11,7 @@ const getNote = db
     category: notesTable.category,
     userId: notesTable.userId,
     createdAt: notesTable.createdAt,
+    updatedAt: notesTable.updatedAt,
   })
   .from(notesTable)
   .where(

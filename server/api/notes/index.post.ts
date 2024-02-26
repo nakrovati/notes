@@ -12,6 +12,7 @@ const insertNote = db
     content: sql.placeholder("content"),
     userId: sql.placeholder("userId"),
     createdAt: sql.placeholder("createdAt"),
+    updatedAt: sql.placeholder("updatedAt"),
   })
   .prepare();
 
@@ -33,12 +34,15 @@ export default defineEventHandler(async (event) => {
   try {
     const { title, content } = await readBody<Body>(event);
 
+    const currentTime = new Date().toISOString();
+
     const newNote: NewNote = {
       id: uuidv4(),
       title,
       content,
       userId,
-      createdAt: new Date().toISOString(),
+      createdAt: currentTime,
+      updatedAt: currentTime,
     };
 
     await insertNote.execute({ ...newNote });

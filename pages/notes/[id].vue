@@ -92,7 +92,13 @@ async function handleDeleteNote() {
             @update:model-value="autoSaveNote"
           ></UInput>
 
-          <UTooltip :text="isNoteSaved ? 'Auto saved' : 'Auto saving'">
+          <UTooltip
+            :text="
+              isNoteSaved
+                ? `Auto saved at ${new Date(note?.updatedAt!).toLocaleString()}`
+                : 'Auto saving'
+            "
+          >
             <UButton
               :icon="
                 isNoteSaved

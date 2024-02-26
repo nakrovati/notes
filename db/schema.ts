@@ -41,6 +41,7 @@ export const notesTable = sqliteTable("notes", {
       onUpdate: "cascade",
     }),
   createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
 });
 
 export type NewNote = typeof notesTable.$inferInsert;

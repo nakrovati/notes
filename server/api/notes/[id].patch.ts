@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
       .set({
         title: body.title,
         content: body.content,
+        updatedAt: new Date().toISOString(),
       })
       .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));
   } catch (error) {
