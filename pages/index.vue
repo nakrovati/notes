@@ -8,9 +8,13 @@ const { data: notes } = await useFetch("/api/notes");
     <ul class="grid grid-cols-3 gap-x-4 gap-y-8">
       <li v-for="note in notes" :key="note.id">
         <NuxtLink :to="`/notes/${note.id}`">
-          <UCard>
-            <template #header>{{ note.title }}</template>
+          <UCard class="h-52">
+            <p class="line-clamp-6">{{ note.content }}</p>
           </UCard>
+          <h2 class="font-bold">{{ note.title }}</h2>
+          <time :datetime="note.createdAt" class="text-sm text-gray-400">
+            {{ new Date(note.createdAt).toLocaleString() }}</time
+          >
         </NuxtLink>
       </li>
     </ul>

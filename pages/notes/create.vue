@@ -26,7 +26,6 @@ async function handleCreateNote(event: FormSubmitEvent<NoteSchema>) {
     });
 
     await navigateTo(`/notes/${note.id}`);
-    window.location.reload();
   } catch (error) {
     console.error(error);
   }

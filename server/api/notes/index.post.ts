@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
       title,
       content,
       userId,
-      createdAt: Date.now(),
+      createdAt: new Date().toISOString(),
     };
 
     await insertNote.execute({ ...newNote });

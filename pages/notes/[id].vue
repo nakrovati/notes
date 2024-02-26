@@ -5,7 +5,7 @@ import { type Input, objectAsync, string } from "valibot";
 
 const route = useRoute();
 
-const { data: note } = useFetch(`/api/notes/${route.params.id}`);
+const { data: note } = await useFetch(`/api/notes/${route.params.id}`);
 
 const noteSchema = objectAsync({
   title: string(),
@@ -19,10 +19,8 @@ const noteState = reactive({
   content: "",
 });
 
-onMounted(() => {
-  noteState.title = note.value?.title ?? "";
-  noteState.content = note.value?.content ?? "";
-});
+noteState.title = note.value?.title!;
+noteState.content = note.value?.content!;
 
 async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
   try {
