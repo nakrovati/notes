@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+definePageMeta({
+  middleware: ["protected"],
+});
+</script>
 
 <template>
   <div class="space-y-4">

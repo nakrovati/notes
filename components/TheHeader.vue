@@ -5,7 +5,7 @@ async function handleLogout() {
   try {
     await $fetch("/api/logout", { method: "POST" });
     await navigateTo("/");
-    user.value = null;
+    window.location.reload();
   } catch (error) {
     console.error(error);
   }
