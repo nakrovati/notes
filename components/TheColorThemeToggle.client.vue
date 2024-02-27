@@ -26,6 +26,7 @@ const items = [
       :name="
         colorMode.value === 'light' ? 'i-heroicons-sun' : 'i-heroicons-moon'
       "
+      dynamic
     ></UIcon
   ></UDropdown>
 </template>
