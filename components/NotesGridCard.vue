@@ -1,17 +1,17 @@
 <script setup lang="ts">
+import { type Note } from "~/db/schema";
+
 defineProps<{
-  content: string;
-  createdAt: string;
-  title: string;
+  note: Note;
 }>();
 </script>
 
 <template>
   <UCard class="h-52">
-    <p class="line-clamp-6">{{ content }}</p>
+    <p class="line-clamp-6">{{ note.content }}</p>
   </UCard>
-  <h2 class="font-bold">{{ title }}</h2>
-  <time :datetime="createdAt" class="text-sm text-gray-400">
-    {{ new Date(createdAt).toLocaleString() }}</time
+  <h2 class="font-bold">{{ note.title }}</h2>
+  <time :datetime="note.updatedAt" class="text-sm text-gray-400">
+    {{ new Date(note.updatedAt).toLocaleString() }}</time
   >
 </template>
