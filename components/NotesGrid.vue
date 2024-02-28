@@ -1,5 +1,9 @@
 <script setup lang="ts">
-const { data: notes } = await useFetch("/api/notes");
+import { type Note } from "~/db/schema";
+
+defineProps<{
+  notes: Note[];
+}>();
 </script>
 
 <template>
