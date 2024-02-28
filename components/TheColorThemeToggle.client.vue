@@ -20,13 +20,13 @@ const items = [
 </script>
 
 <template>
-  <UDropdown :items="items" :popper="{ placement: 'bottom-start' }"
-    ><UIcon
-      class="h-auto w-6"
+  <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
+    <UIcon
+      class="size-6"
       :name="
         colorMode.value === 'light' ? 'i-heroicons-sun' : 'i-heroicons-moon'
       "
       dynamic
-    ></UIcon
-  ></UDropdown>
+    />
+  </UDropdown>
 </template>

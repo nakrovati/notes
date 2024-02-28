@@ -27,15 +27,15 @@ const items = [
   <header>
     <UContainer
       :ui="{
-        base: 'flex justify-between',
+        base: 'flex justify-between items-center',
         padding: 'py-4',
         constrained: 'max-w-full',
       }"
     >
-      <NuxtLink v-if="$route.path !== '/'" to="/"> Notes </NuxtLink>
+      <NuxtLink v-if="$route.path !== '/'" to="/">Notes</NuxtLink>
       <div v-else>Notes</div>
 
-      <div class="flex gap-2">
+      <div class="flex items-center gap-2">
         <TheColorThemeToggle />
 
         <template v-if="!user">
@@ -44,7 +44,7 @@ const items = [
         </template>
 
         <UDropdown v-else :items="items">
-          <UAvatar :alt="user.email"></UAvatar>
+          <UAvatar :alt="user.email" />
 
           <template #account>
             <div class="text-left">

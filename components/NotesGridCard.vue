@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <UCard class="h-52">
+  <UCard class="h-64">
     <p class="line-clamp-6">{{ note.content }}</p>
   </UCard>
   <h2 class="font-bold">{{ note.title }}</h2>

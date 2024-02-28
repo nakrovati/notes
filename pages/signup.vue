@@ -74,15 +74,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       @submit="onSubmit"
     >
       <UFormGroup label="Email" name="email">
-        <UInput v-model="state.email"></UInput>
+        <UInput v-model="state.email" />
       </UFormGroup>
 
       <UFormGroup label="Password" name="password">
-        <UInput v-model="state.password" type="password"></UInput>
+        <UInput v-model="state.password" type="password" />
       </UFormGroup>
 
       <UFormGroup label="Confirm password" name="passwordConfirmation">
-        <UInput v-model="state.password_confirmation" type="password"></UInput>
+        <UInput v-model="state.password_confirmation" type="password" />
       </UFormGroup>
 
       <UButton size="lg" class="inline-block" type="submit">Sign up</UButton>
