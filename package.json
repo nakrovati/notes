@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare",
     "format": "prettier -w .",
     "lint": "eslint .",
+    "db:generate": "drizzle-kit generate:sqlite",
+    "db:migrate": "bun run ./db/migrate.ts",
     "prepare": "lefthook install"
   },
   "dependencies": {
