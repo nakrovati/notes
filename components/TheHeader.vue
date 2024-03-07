@@ -18,6 +18,10 @@ const items = [
       slot: "account",
       disabled: true,
     },
+    {
+      label: "Settings",
+      to: "/settings",
+    },
   ],
   [{ label: "Logout", click: () => handleLogout() }],
 ];
