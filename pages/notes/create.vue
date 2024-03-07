@@ -3,6 +3,10 @@ import type { FormSubmitEvent } from "#ui/types";
 
 import { type Input, objectAsync, string } from "valibot";
 
+definePageMeta({
+  middleware: ["protected"],
+});
+
 const noteSchema = objectAsync({
   title: string(),
   content: string(),
