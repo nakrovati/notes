@@ -2,6 +2,8 @@
 import { useSorting } from "~/composables/useSorting";
 import { type Note } from "~/config/db/schema";
 
+const user = useUser();
+
 const { data: notes } = await useFetch("/api/notes");
 
 const { sortType, sortOrder, sortedNotes, toggleSortOrder } = useSorting(
@@ -13,15 +15,17 @@ const { sortType, sortOrder, sortedNotes, toggleSortOrder } = useSorting(
   <section class="space-y-4">
     <h1 class="text-center text-2xl">All notes</h1>
 
-    <NotesPanelToolbar
-      v-model:sort-type="sortType"
-      :sort-order="sortOrder"
-      @toggle-sort-order="toggleSortOrder"
-    />
+    <template v-if="notes">
+      <NotesPanelToolbar
+        v-model:sort-type="sortType"
+        :sort-order="sortOrder"
+        @toggle-sort-order="toggleSortOrder"
+      />
 
-    <NotesGrid :notes="sortedNotes" />
+      <NotesGrid :notes="sortedNotes" />
+    </template>
 
-    <UButton to="/notes/create">Create new note</UButton>
+    <UButton :to="user ? '/notes/create' : '/login'">Create new note</UButton>
   </section>
 </template>
 ~/config/db/schema
