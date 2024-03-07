@@ -22,6 +22,8 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody<Body>(event);
 
+    console.log(body);
+
     await db
       .update(notesTable)
       .set({

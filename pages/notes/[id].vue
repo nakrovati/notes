@@ -17,10 +17,12 @@ type NoteSchema = Input<typeof noteSchema>;
 const noteState = reactive({
   title: "",
   content: "",
+  updatedAt: "",
 });
 
 noteState.title = note.value?.title!;
 noteState.content = note.value?.content!;
+noteState.updatedAt = new Date().toISOString();
 
 async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
   if (isNoteSaved.value) return;
@@ -50,6 +52,7 @@ async function saveNote() {
       },
     });
 
+    noteState.updatedAt = new Date().toISOString();
     isNoteSaved.value = true;
   } catch (error) {
     console.error(error);
@@ -95,7 +98,7 @@ async function handleDeleteNote() {
           <UTooltip
             :text="
               isNoteSaved
-                ? `Auto saved at ${new Date(note?.updatedAt!).toLocaleString()}`
+                ? `Auto saved at ${new Date(noteState.updatedAt).toLocaleString()}`
                 : 'Auto saving'
             "
           >
