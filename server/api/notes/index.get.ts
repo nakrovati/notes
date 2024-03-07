@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     });
 
     return note;
-  } catch (error) {
+  } catch {
     throw createError({
       message: "An unknown server error occured",
       statusCode: 500,

@@ -32,6 +32,7 @@
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-perfectionist": "^2.5.0",
+    "eslint-plugin-unicorn": "^51.0.1",
     "lefthook": "^1.6.2",
     "lucia": "^3.0.1",
     "oslo": "^1.1.2",

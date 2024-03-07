@@ -36,7 +36,7 @@ function validateBody(body: unknown) {
 
   try {
     return parse(Schema, body);
-  } catch (error) {
+  } catch {
     return;
   }
 }

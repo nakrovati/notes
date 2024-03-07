@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
         updatedAt: new Date().toISOString(),
       })
       .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));
-  } catch (error) {
+  } catch {
     throw createError({
       message: "An unknown server error occured",
       statusCode: 500,

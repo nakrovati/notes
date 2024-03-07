@@ -3,6 +3,7 @@ module.exports = {
   extends: [
     "@nuxt/eslint-config",
     "plugin:perfectionist/recommended-natural",
+    "plugin:unicorn/recommended",
     "prettier",
   ],
   plugins: ["perfectionist"],
@@ -12,5 +13,8 @@ module.exports = {
     "perfectionist/sort-vue-attributes": "off",
     "perfectionist/sort-svelte-attributes": "off",
     "perfectionist/sort-astro-attributes": "off",
+    "unicorn/no-null": "off",
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/filename-case": "off",
   },
 };

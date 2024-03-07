@@ -24,7 +24,7 @@ function validateBody(body: unknown) {
 
   try {
     return parse(Schema, body);
-  } catch (error) {
+  } catch {
     return;
   }
 }
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
       "Set-Cookie",
       lucia.createSessionCookie(session.id).serialize(),
     );
-  } catch (error) {
+  } catch {
     throw createError({
       message: "An unknown server error occured",
       statusCode: 500,

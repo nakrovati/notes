@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     await deleteNote.execute({ id: noteId, userId });
-  } catch (error) {
+  } catch {
     throw createError({
       message: "An unknown server error occured",
       statusCode: 500,

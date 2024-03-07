@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
     await insertNote.execute({ ...newNote });
 
     return newNote;
-  } catch (error) {
+  } catch {
     throw createError({
       message: "An unknown server error occured",
       statusCode: 500,
