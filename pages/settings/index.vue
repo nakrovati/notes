@@ -5,7 +5,7 @@ definePageMeta({
 
 async function deleteAccount() {
   try {
-    await $fetch("/api/delete", { method: "DELETE" });
+    await $fetch("/api/account/delete", { method: "DELETE" });
     await navigateTo("/");
     window.location.reload();
   } catch (error) {

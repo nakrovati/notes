@@ -3,7 +3,7 @@ const user = useUser();
 
 async function handleLogout() {
   try {
-    await $fetch("/api/logout", { method: "POST" });
+    await $fetch("/api/account/logout", { method: "POST" });
     await navigateTo("/");
     window.location.reload();
   } catch (error) {

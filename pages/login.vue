@@ -31,7 +31,7 @@ const form = ref<Form<Schema>>();
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    await $fetch("/api/login", {
+    await $fetch("/api/account/login", {
       method: "POST",
       body: event.data,
     });

@@ -46,7 +46,7 @@ const state = reactive({
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    await $fetch("/api/signup", {
+    await $fetch("/api/account/signup", {
       method: "POST",
       body: event.data,
     });
