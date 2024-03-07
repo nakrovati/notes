@@ -4,8 +4,8 @@ import { generateId } from "lucia";
 import { Argon2id } from "oslo/password";
 import { custom, email, forward, object, parse, string } from "valibot";
 
-import { db } from "~/db";
-import { userTable } from "~/db/schema";
+import { db } from "~/config/db";
+import { userTable } from "~/config/db/schema";
 
 const insertUser = db
   .insert(userTable)

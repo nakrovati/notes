@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 
-import { db } from "~/db";
-import { userTable } from "~/db/schema";
+import { db } from "~/config/db";
+import { userTable } from "~/config/db/schema";
 
 const deleteUser = db
   .delete(userTable)

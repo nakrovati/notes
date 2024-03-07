@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 
-import { db } from "~/db";
-import { notesTable } from "~/db/schema";
+import { db } from "~/config/db";
+import { notesTable } from "~/config/db/schema";
 
 interface Body {
   content: string;

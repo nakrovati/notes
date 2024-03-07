@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Note } from "~/db/schema";
+import { type Note } from "~/config/db/schema";
 
 defineProps<{
   note: Note;
@@ -15,3 +15,4 @@ defineProps<{
     {{ new Date(note.updatedAt).toLocaleString() }}</time
   >
 </template>
+~/config/db/schema

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useSorting } from "~/composables/useSorting";
-import { type Note } from "~/db/schema";
+import { type Note } from "~/config/db/schema";
 
 const { data: notes } = await useFetch("/api/notes");
 
@@ -24,3 +24,4 @@ const { sortType, sortOrder, sortedNotes, toggleSortOrder } = useSorting(
     <UButton to="/notes/create">Create new note</UButton>
   </section>
 </template>
+~/config/db/schema

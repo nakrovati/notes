@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
-import { db } from "~/db";
-import { type NewNote, notesTable } from "~/db/schema";
+import { db } from "~/config/db";
+import { type NewNote, notesTable } from "~/config/db/schema";
 
 const insertNote = db
   .insert(notesTable)

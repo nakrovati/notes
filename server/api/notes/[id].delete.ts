@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 
-import { db } from "~/db";
-import { notesTable } from "~/db/schema";
+import { db } from "~/config/db";
+import { notesTable } from "~/config/db/schema";
 
 const deleteNote = db
   .delete(notesTable)
