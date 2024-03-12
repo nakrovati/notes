@@ -28,4 +28,3 @@ const { sortType, sortOrder, sortedNotes, toggleSortOrder } = useSorting(
     <UButton :to="user ? '/notes/create' : '/login'">Create new note</UButton>
   </section>
 </template>
-~/config/db/schema

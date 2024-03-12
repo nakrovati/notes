@@ -15,4 +15,3 @@ defineProps<{
     {{ new Date(note.updatedAt).toLocaleString() }}</time
   >
 </template>
-~/config/db/schema

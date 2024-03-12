@@ -15,4 +15,3 @@ defineProps<{
     </li>
   </ul>
 </template>
-~/config/db/schema

@@ -10,7 +10,7 @@ defineProps({
 <template>
   <div class="space-y-4 text-center">
     <h1 class="mt-8 text-8xl font-bold">{{ error?.statusCode }}</h1>
-    <p>{{ error?.message }}</p>
+    <p>{{ error?.statusMessage }}</p>
     <UButton to="/">Go home</UButton>
   </div>
 </template>

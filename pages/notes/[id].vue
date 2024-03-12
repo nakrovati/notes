@@ -4,8 +4,12 @@ import type { FormSubmitEvent } from "#ui/types";
 import { type Input, objectAsync, string } from "valibot";
 
 const route = useRoute();
+const user = useUser();
 
-const { data: note } = await useFetch(`/api/notes/${route.params.id}`);
+const { data: note, error } = await useFetch(`/api/notes/${route.params.id}`);
+if (error.value) {
+  throw createError(error.value);
+}
 
 const noteSchema = objectAsync({
   title: string(),
@@ -62,6 +66,8 @@ async function saveNote() {
 const debouncedAutoSaveNote = debounce(saveNote, 3000);
 
 function autoSaveNote() {
+  if (!user.value) return;
+
   isNoteSaved.value = false;
 
   debouncedAutoSaveNote();
@@ -77,6 +83,41 @@ async function handleDeleteNote() {
     console.error(error);
   }
 }
+
+const deleteNoteItems = [
+  [
+    {
+      label: "Delete note",
+      click: () => {
+        handleDeleteNote();
+      },
+    },
+  ],
+];
+
+async function handleChangeProtection() {
+  try {
+    await $fetch(`/api/notes/${route.params.id}`, {
+      method: "PATCH",
+      body: {
+        isProtected: !note.value?.isProtected,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const changeProtectionItems = [
+  [
+    {
+      label: "Change protection",
+      click: () => {
+        handleChangeProtection();
+      },
+    },
+  ],
+];
 </script>
 
 <template>
@@ -88,36 +129,40 @@ async function handleDeleteNote() {
       @submit="handleSaveNote"
     >
       <UFormGroup name="title">
-        <div class="grid grid-cols-[1fr_auto_auto] gap-4">
+        <div class="flex gap-4">
           <UInput
             v-model="noteState.title"
             placeholder="Note title"
+            :disabled="!user?.id"
+            :ui="{ wrapper: 'w-full' }"
             @update:model-value="autoSaveNote"
-          ></UInput>
-
-          <UTooltip
-            :text="
-              isNoteSaved
-                ? `Auto saved at ${new Date(noteState.updatedAt).toLocaleString()}`
-                : 'Auto saving'
-            "
-          >
-            <UButton
-              :icon="
-                isNoteSaved
-                  ? 'i-heroicons-check-circle'
-                  : 'i-heroicons-arrow-path'
-              "
-              :loading="!isNoteSaved"
-              variant="outline"
-            />
-          </UTooltip>
-
-          <UButton
-            icon="i-heroicons-adjustments-vertical"
-            variant="outline"
-            @click="isModalOpen = !isModalOpen"
           />
+
+          <template v-if="user?.id === note?.userId">
+            <UTooltip
+              :text="
+                isNoteSaved
+                  ? `Auto saved at ${new Date(noteState.updatedAt).toLocaleString()}`
+                  : 'Auto saving'
+              "
+            >
+              <UButton
+                :icon="
+                  isNoteSaved
+                    ? 'i-heroicons-check-circle'
+                    : 'i-heroicons-arrow-path'
+                "
+                :loading="!isNoteSaved"
+                variant="outline"
+              />
+            </UTooltip>
+
+            <UButton
+              icon="i-heroicons-adjustments-vertical"
+              variant="outline"
+              @click="isModalOpen = !isModalOpen"
+            />
+          </template>
         </div>
       </UFormGroup>
 
@@ -126,26 +171,66 @@ async function handleDeleteNote() {
           v-model="noteState.content"
           autoresize
           :rows="10"
+          :disabled="!user?.id"
           :maxrows="20"
           @update:model-value="autoSaveNote"
-      /></UFormGroup>
+        />
+      </UFormGroup>
 
-      <UButton type="submit">Save note</UButton>
+      <UButton type="submit" :disabled="!user?.id">Save note</UButton>
     </UForm>
 
     <UModal v-model="isModalOpen">
-      <div class="flex flex-col gap-8 p-4">
-        <h1 class="text-2xl">{{ note?.title }}</h1>
+      <UCard>
+        <template #header>
+          <h1 class="text-2xl">{{ note?.title }}</h1>
+        </template>
 
         <section class="space-y-4">
-          <h2 class="text-xl">Danger zone</h2>
-          <UButton color="red" @click="handleDeleteNote">Delete note</UButton>
+          <h2 class="text-lg">Danger zone</h2>
+          <ul class="space-y-2">
+            <li
+              class="grid grid-rows-[auto_auto] items-center gap-1 sm:grid-cols-[1fr_auto] sm:grid-rows-none"
+            >
+              <div>
+                <h3 class="font-semibold">Change note protection.</h3>
+                <p>
+                  Note nowlvfmdlkvmfklvmelfkvmelk mlfeklfvcmelrkmlkmerl
+                  lkfvemrlker
+                  {{ note?.isProtected ? "protected" : "unprotected" }}.
+                </p>
+              </div>
+              <UDropdown :items="changeProtectionItems">
+                <UButton color="red" @click="handleChangeProtection">
+                  Change protection
+                </UButton>
+              </UDropdown>
+            </li>
+            <li
+              class="grid grid-rows-[auto_auto] items-center gap-1 sm:grid-cols-[1fr_auto] sm:grid-rows-none"
+            >
+              <div>
+                <h3 class="font-semibold">Delete note</h3>
+                <p>This action cannot be undone.</p>
+              </div>
+
+              <UDropdown :items="deleteNoteItems">
+                <UButton color="red">Delete note</UButton>
+              </UDropdown>
+            </li>
+          </ul>
         </section>
 
-        <UButton class="ml-auto" variant="outline" @click="isModalOpen = false"
-          >Close</UButton
-        >
-      </div>
+        <template #footer>
+          <UButton
+            class="ml-auto"
+            variant="outline"
+            @click="isModalOpen = false"
+          >
+            Close
+          </UButton>
+        </template>
+      </UCard>
     </UModal>
   </div>
 </template>

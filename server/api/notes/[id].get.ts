@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { db } from "~/config/db";
 import { notesTable } from "~/config/db/schema";
@@ -12,14 +12,10 @@ const getNote = db
     userId: notesTable.userId,
     createdAt: notesTable.createdAt,
     updatedAt: notesTable.updatedAt,
+    isProtected: notesTable.isProtected,
   })
   .from(notesTable)
-  .where(
-    and(
-      eq(notesTable.userId, sql.placeholder("userId")),
-      eq(notesTable.id, sql.placeholder("id")),
-    ),
-  )
+  .where(eq(notesTable.id, sql.placeholder("id")))
   .limit(1)
   .prepare();
 
@@ -27,24 +23,23 @@ export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
   const userId = event.context.session?.userId;
 
-  if (!userId) {
+  const notes = await getNote.execute({
+    id: noteId,
+  });
+
+  if (notes.length === 0) {
     throw createError({
-      message: "User not authenticated",
-      statusCode: 401,
+      statusMessage: "Note not found",
+      statusCode: 404,
     });
   }
 
-  try {
-    const note = await getNote.execute({
-      id: noteId,
-      userId: userId,
-    });
-
-    return note[0];
-  } catch {
+  if (notes[0].isProtected && notes[0].userId !== userId) {
     throw createError({
-      message: "An unknown server error occured",
-      statusCode: 500,
+      statusCode: 403,
+      statusMessage: "Note is protected",
     });
   }
+
+  return notes[0];
 });

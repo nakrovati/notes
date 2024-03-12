@@ -44,7 +44,7 @@ async function handleCreateNote(event: FormSubmitEvent<NoteSchema>) {
     @submit="handleCreateNote"
   >
     <UFormGroup name="title">
-      <UInput v-model="noteState.title" placeholder="Note title"></UInput>
+      <UInput v-model="noteState.title" placeholder="Note title" />
     </UFormGroup>
 
     <UFormGroup name="content">
@@ -53,7 +53,8 @@ async function handleCreateNote(event: FormSubmitEvent<NoteSchema>) {
         autoresize
         :rows="10"
         :maxrows="20"
-    /></UFormGroup>
+      />
+    </UFormGroup>
 
     <UButton type="submit">Create note</UButton>
   </UForm>

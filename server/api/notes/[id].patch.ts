@@ -3,10 +3,10 @@ import { and, eq } from "drizzle-orm";
 import { db } from "~/config/db";
 import { notesTable } from "~/config/db/schema";
 
-interface Body {
-  content: string;
-  title: string;
-}
+type Body = Pick<
+  typeof notesTable.$inferSelect,
+  "content" | "isProtected" | "title"
+>;
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
@@ -22,13 +22,12 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody<Body>(event);
 
-    console.log(body);
-
     await db
       .update(notesTable)
       .set({
         title: body.title,
         content: body.content,
+        isProtected: body.isProtected,
         updatedAt: new Date().toISOString(),
       })
       .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));
