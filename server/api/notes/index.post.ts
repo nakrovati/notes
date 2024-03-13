@@ -1,3 +1,4 @@
+import { LibsqlError } from "@libsql/client";
 import { sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
@@ -33,7 +34,6 @@ export default defineEventHandler(async (event) => {
 
   try {
     const { title, content } = await readBody<Body>(event);
-
     const currentTime = new Date().toISOString();
 
     const newNote: NewNote = {
@@ -48,10 +48,19 @@ export default defineEventHandler(async (event) => {
     await insertNote.execute({ ...newNote });
 
     return newNote;
-  } catch {
-    throw createError({
-      message: "An unknown server error occured",
-      statusCode: 500,
-    });
+  } catch (error) {
+    if (error instanceof LibsqlError) {
+      if (error.code === "SQLITE_CONSTRAINT_PRIMARYKEY") {
+        throw createError({
+          message: "Id already used",
+          statusCode: 500,
+        });
+      }
+
+      throw createError({
+        message: "An unknown database error occured",
+        statusCode: 500,
+      });
+    }
   }
 });

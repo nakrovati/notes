@@ -1,3 +1,4 @@
+import { LibsqlError } from "@libsql/client";
 import { and, eq, sql } from "drizzle-orm";
 
 import { db } from "~/config/db";
@@ -25,11 +26,19 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await deleteNote.execute({ id: noteId, userId });
-  } catch {
-    throw createError({
-      message: "An unknown server error occured",
-      statusCode: 500,
-    });
+    const deletedNote = await deleteNote.execute({ id: noteId, userId: "222" });
+    if (!deletedNote) {
+      throw createError({
+        message: "Note not found or user does not have permission",
+        statusCode: 404,
+      });
+    }
+  } catch (error) {
+    if (error instanceof LibsqlError) {
+      throw createError({
+        message: "An unknown database error occured",
+        statusCode: 500,
+      });
+    }
   }
 });

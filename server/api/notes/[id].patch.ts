@@ -1,12 +1,10 @@
+import { LibsqlError } from "@libsql/client";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "~/config/db";
-import { notesTable } from "~/config/db/schema";
+import { Note, notesTable } from "~/config/db/schema";
 
-type Body = Pick<
-  typeof notesTable.$inferSelect,
-  "content" | "isProtected" | "title"
->;
+type Body = Pick<Note, "content" | "isProtected" | "title">;
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
@@ -31,10 +29,12 @@ export default defineEventHandler(async (event) => {
         updatedAt: new Date().toISOString(),
       })
       .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));
-  } catch {
-    throw createError({
-      message: "An unknown server error occured",
-      statusCode: 500,
-    });
+  } catch (error) {
+    if (error instanceof LibsqlError) {
+      throw createError({
+        message: "An unknown database error occured",
+        statusCode: 500,
+      });
+    }
   }
 });

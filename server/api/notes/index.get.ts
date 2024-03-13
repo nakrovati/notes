@@ -1,3 +1,4 @@
+import { LibsqlError } from "@libsql/client";
 import { eq, sql } from "drizzle-orm";
 
 import { db } from "~/config/db";
@@ -33,10 +34,12 @@ export default defineEventHandler(async (event) => {
     });
 
     return note;
-  } catch {
-    throw createError({
-      message: "An unknown server error occured",
-      statusCode: 500,
-    });
+  } catch (error) {
+    if (error instanceof LibsqlError) {
+      throw createError({
+        message: "An unknown database error occured",
+        statusCode: 500,
+      });
+    }
   }
 });
