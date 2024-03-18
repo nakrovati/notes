@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const deletedNote = await deleteNote.execute({ id: noteId, userId: "222" });
+    const deletedNote = await deleteNote.execute({ id: noteId, userId });
     if (!deletedNote) {
       throw createError({
         message: "Note not found or user does not have permission",
