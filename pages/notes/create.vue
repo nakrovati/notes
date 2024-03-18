@@ -7,6 +7,8 @@ definePageMeta({
   middleware: ["protected"],
 });
 
+const noteService = new NoteService();
+
 const noteSchema = objectAsync({
   title: string(),
   content: string(),
@@ -21,14 +23,7 @@ const noteState = reactive({
 
 async function handleCreateNote(event: FormSubmitEvent<NoteSchema>) {
   try {
-    const note = await $fetch("/api/notes", {
-      method: "POST",
-      body: {
-        title: event.data.title,
-        content: event.data.content,
-      },
-    });
-
+    const note = await noteService.createNote(event.data);
     await navigateTo(`/notes/${note.id}`);
   } catch (error) {
     console.error(error);

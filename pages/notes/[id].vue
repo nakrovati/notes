@@ -4,7 +4,10 @@ import type { FormSubmitEvent } from "#ui/types";
 import { type Input, objectAsync, string } from "valibot";
 
 const route = useRoute();
+
 const user = useUser();
+
+const noteService = new NoteService();
 
 const { data: note, error } = await useFetch(`/api/notes/${route.params.id}`);
 if (error.value) {
@@ -32,13 +35,7 @@ async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
   if (isNoteSaved.value) return;
 
   try {
-    await $fetch(`/api/notes/${route.params.id}`, {
-      method: "PATCH",
-      body: {
-        title: event.data.title,
-        content: event.data.content,
-      },
-    });
+    await noteService.updateNote(route.params.id.toString(), event.data);
   } catch (error) {
     console.error(error);
   }
@@ -48,13 +45,7 @@ const isNoteSaved = ref(true);
 
 async function saveNote() {
   try {
-    await $fetch(`/api/notes/${route.params.id}`, {
-      method: "PATCH",
-      body: {
-        title: noteState.title,
-        content: noteState.content,
-      },
-    });
+    await noteService.updateNote(route.params.id.toString(), noteState);
 
     noteState.updatedAt = new Date().toISOString();
     isNoteSaved.value = true;
@@ -77,7 +68,7 @@ const isModalOpen = ref(false);
 
 async function handleDeleteNote() {
   try {
-    await $fetch(`/api/notes/${route.params.id}`, { method: "DELETE" });
+    await noteService.deleteNote(route.params.id.toString());
     await navigateTo("/");
   } catch (error) {
     console.error(error);
@@ -97,11 +88,8 @@ const deleteNoteItems = [
 
 async function handleChangeProtection() {
   try {
-    await $fetch(`/api/notes/${route.params.id}`, {
-      method: "PATCH",
-      body: {
-        isProtected: !note.value?.isProtected,
-      },
+    await noteService.updateNote(route.params.id.toString(), {
+      isProtected: +!note.value?.isProtected,
     });
   } catch (error) {
     console.error(error);
