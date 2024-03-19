@@ -184,9 +184,11 @@ const changeProtectionItems = [
               <div>
                 <h3 class="font-semibold">Change note protection.</h3>
                 <p>
-                  Note nowlvfmdlkvmfklvmelfkvmelk mlfeklfvcmelrkmlkmerl
-                  lkfvemrlker
-                  {{ note?.isProtected ? "protected" : "unprotected" }}.
+                  {{
+                    note?.isProtected
+                      ? `Note "${note.title} protected"`
+                      : `Note "${note?.title} not protected"`
+                  }}
                 </p>
               </div>
               <UDropdown :items="changeProtectionItems">
