@@ -29,7 +29,12 @@ export class NoteService {
 
   async updateNote(
     noteId: string,
-    body: Partial<Pick<Note, "category" | "content" | "isProtected" | "title">>,
+    body: Partial<
+      Pick<
+        Note,
+        "category" | "content" | "isFavourite" | "isProtected" | "title"
+      >
+    >,
   ) {
     try {
       await $fetch(`/api/notes/${noteId}`, {

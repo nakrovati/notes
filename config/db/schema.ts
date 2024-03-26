@@ -43,6 +43,7 @@ export const notesTable = sqliteTable("notes", {
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
   isProtected: integer("is_protected").notNull().default(1),
+  isFavourite: integer("is_favourite").notNull().default(0),
 });
 
 export type NewNote = typeof notesTable.$inferInsert;

@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "~/config/db";
 import { Note, notesTable } from "~/config/db/schema";
 
-type Body = Pick<Note, "content" | "isProtected" | "title">;
+type Body = Pick<Note, "content" | "isFavourite" | "isProtected" | "title">;
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
         title: body.title,
         content: body.content,
         isProtected: body.isProtected,
+        isFavourite: body.isFavourite,
         updatedAt: new Date().toISOString(),
       })
       .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));

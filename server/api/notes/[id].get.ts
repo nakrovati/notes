@@ -14,6 +14,7 @@ const getNote = db
     createdAt: notesTable.createdAt,
     updatedAt: notesTable.updatedAt,
     isProtected: notesTable.isProtected,
+    isFavourite: notesTable.isFavourite,
   })
   .from(notesTable)
   .where(eq(notesTable.id, sql.placeholder("id")))
