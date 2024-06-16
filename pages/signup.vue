@@ -28,7 +28,7 @@ const SignupSchema = v.pipe(
   }),
   v.forward(
     v.check(
-      (input) => input.password !== input.password_confirmation,
+      (input) => input.password === input.password_confirmation,
       "Confirm password do not match",
     ),
     ["password_confirmation"],
@@ -46,6 +46,7 @@ const state = reactive({
 });
 
 async function onSubmit(event: FormSubmitEvent<SignupInput>) {
+  console.log(state);
   try {
     await $fetch("/api/account/signup", {
       body: event.data,

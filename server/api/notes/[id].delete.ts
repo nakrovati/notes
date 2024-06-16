@@ -20,7 +20,6 @@ export default defineEventHandler(async (event) => {
 
   if (!userId) {
     throw createError({
-      message: "User not authenticated",
       statusCode: 401,
     });
   }
@@ -33,12 +32,13 @@ export default defineEventHandler(async (event) => {
         statusCode: 404,
       });
     }
+
+    setResponseStatus(event, 204);
   } catch (error) {
     if (error instanceof LibsqlError) {
-      throw createError({
-        message: "An unknown database error occured",
-        statusCode: 500,
-      });
+      console.log(error);
     }
+
+    throw error;
   }
 });

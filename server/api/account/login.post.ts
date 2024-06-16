@@ -1,3 +1,4 @@
+import { LibsqlError } from "@libsql/client";
 import { eq, sql } from "drizzle-orm";
 import { Argon2id } from "oslo/password";
 import * as v from "valibot";
@@ -36,7 +37,6 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     const creditnails = v.parse(LoginSchema, body);
-    if (!creditnails) throw new Error("Invalid body");
 
     const user = await getUser.execute({ email: creditnails.email });
     if (user.length === 0) {
@@ -73,6 +73,10 @@ export default defineEventHandler(async (event) => {
         },
         statusCode: 400,
       });
+    }
+
+    if (error instanceof LibsqlError) {
+      console.log(error);
     }
 
     throw error;

@@ -34,7 +34,7 @@ const SignupSchema = v.pipe(
   }),
   v.forward(
     v.check(
-      (input) => input.password !== input.password_confirmation,
+      (input) => input.password === input.password_confirmation,
       "Confirm password do not match",
     ),
     ["password_confirmation"],
@@ -46,7 +46,6 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     const creditnails = v.parse(SignupSchema, body);
-    if (!creditnails) return new Error("Invalid body");
 
     const hashedPassword = await new Argon2id().hash(creditnails.password);
     const userId = generateId(15);
@@ -73,11 +72,15 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    if (error instanceof LibsqlError && error.code === "SQLITE_CONSTRAINT") {
-      throw createError({
-        message: "Email already used",
-        statusCode: 400,
-      });
+    if (error instanceof LibsqlError) {
+      if (error.code === "SQLITE_CONSTRAINT") {
+        throw createError({
+          message: "Email already used",
+          statusCode: 400,
+        });
+      }
+
+      console.log(error);
     }
 
     throw error;

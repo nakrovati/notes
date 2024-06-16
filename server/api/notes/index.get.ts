@@ -36,10 +36,9 @@ export default defineEventHandler(async (event) => {
     return note;
   } catch (error) {
     if (error instanceof LibsqlError) {
-      throw createError({
-        message: "An unknown database error occured",
-        statusCode: 500,
-      });
+      console.log(error);
     }
+
+    throw error;
   }
 });

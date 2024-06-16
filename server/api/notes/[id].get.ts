@@ -26,31 +26,28 @@ export default defineEventHandler(async (event) => {
   const userId = event.context.session?.userId;
 
   try {
-    const notes = await getNote.execute({
-      id: noteId,
-    });
+    const notes = await getNote.execute({ id: noteId });
 
     if (notes.length === 0) {
       throw createError({
+        message: "Note not found",
         statusCode: 404,
-        statusMessage: "Note not found",
       });
     }
 
     if (notes[0].isProtected && notes[0].userId !== userId) {
       throw createError({
+        message: "Note is protected",
         statusCode: 403,
-        statusMessage: "Note is protected",
       });
     }
 
     return notes[0];
   } catch (error) {
     if (error instanceof LibsqlError) {
-      throw createError({
-        message: "An unknown database error occured",
-        statusCode: 500,
-      });
+      console.log(error);
     }
+
+    throw error;
   }
 });

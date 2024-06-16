@@ -34,10 +34,9 @@ export default defineEventHandler(async (event) => {
       .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));
   } catch (error) {
     if (error instanceof LibsqlError) {
-      throw createError({
-        message: "An unknown database error occured",
-        statusCode: 500,
-      });
+      console.log(error);
     }
+
+    throw error;
   }
 });

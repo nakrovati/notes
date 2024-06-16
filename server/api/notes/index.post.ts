@@ -53,14 +53,13 @@ export default defineEventHandler(async (event) => {
       if (error.code === "SQLITE_CONSTRAINT_PRIMARYKEY") {
         throw createError({
           message: "Id already used",
-          statusCode: 500,
+          statusCode: 400,
         });
       }
 
-      throw createError({
-        message: "An unknown database error occured",
-        statusCode: 500,
-      });
+      console.log(error);
     }
+
+    throw error;
   }
 });

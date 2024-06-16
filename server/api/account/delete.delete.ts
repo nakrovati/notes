@@ -1,3 +1,4 @@
+import { LibsqlError } from "@libsql/client";
 import { and, eq, sql } from "drizzle-orm";
 
 import { db } from "~/config/db";
@@ -6,6 +7,7 @@ import { userTable } from "~/config/db/schema";
 const deleteUser = db
   .delete(userTable)
   .where(and(eq(userTable.id, sql.placeholder("id"))))
+  .returning()
   .prepare();
 
 export default eventHandler(async (event) => {
@@ -22,13 +24,23 @@ export default eventHandler(async (event) => {
       lucia.createBlankSessionCookie().serialize(),
     );
 
-    await deleteUser.execute({
+    const deletedUsers = await deleteUser.execute({
       id: event.context.session.userId,
     });
-  } catch {
-    throw createError({
-      message: "An unknown server error occured",
-      statusCode: 500,
-    });
+
+    if (deletedUsers.length === 0) {
+      throw createError({
+        message: "User not found",
+        statusCode: 404,
+      });
+    }
+
+    setResponseStatus(event, 204);
+  } catch (error) {
+    if (error instanceof LibsqlError) {
+      console.log(error);
+    }
+
+    throw error;
   }
 });
