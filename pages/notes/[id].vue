@@ -33,7 +33,7 @@ noteState.content = note.value?.content;
 noteState.updatedAt = new Date().toISOString();
 
 async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
-  if (isNoteSaved.value) return;
+  if (!user.value || isNoteSaved.value) return;
 
   try {
     await noteService.updateNote(noteId, event.data);
@@ -44,7 +44,11 @@ async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
 
 const isNoteSaved = ref(true);
 
-async function saveNote() {
+const debouncedAutoSaveNote = useDebounceFn(async () => {
+  if (!user.value) return;
+
+  isNoteSaved.value = false;
+
   try {
     await noteService.updateNote(noteId, noteState);
 
@@ -53,17 +57,7 @@ async function saveNote() {
   } catch (error) {
     console.error(error);
   }
-}
-
-const debouncedAutoSaveNote = debounce(saveNote, 3000);
-
-function autoSaveNote() {
-  if (!user.value) return;
-
-  isNoteSaved.value = false;
-
-  debouncedAutoSaveNote();
-}
+}, 3000);
 
 const isModalOpen = ref(false);
 
@@ -135,7 +129,7 @@ const changeProtectionItems = [
             placeholder="Note title"
             :disabled="!user?.id"
             :ui="{ wrapper: 'w-full' }"
-            @update:model-value="autoSaveNote"
+            @update:model-value="debouncedAutoSaveNote"
           />
 
           <template v-if="user?.id === note?.userId">
@@ -183,7 +177,7 @@ const changeProtectionItems = [
           :rows="10"
           :disabled="!user?.id"
           :maxrows="20"
-          @update:model-value="autoSaveNote"
+          @update:model-value="debouncedAutoSaveNote"
         />
       </UFormGroup>
 
