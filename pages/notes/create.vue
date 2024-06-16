@@ -10,15 +10,15 @@ definePageMeta({
 const noteService = new NoteService();
 
 const noteSchema = objectAsync({
-  title: string(),
   content: string(),
+  title: string(),
 });
 
 type NoteSchema = Input<typeof noteSchema>;
 
 const noteState = reactive({
-  title: "",
   content: "",
+  title: "",
 });
 
 async function handleCreateNote(event: FormSubmitEvent<NoteSchema>) {

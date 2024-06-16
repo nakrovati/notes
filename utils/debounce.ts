@@ -1,4 +1,4 @@
-export default function (fn: (...args: unknown[]) => void, ms = 300) {
+export default function debounce(fn: (...args: unknown[]) => void, ms = 300) {
   let timeoutId: ReturnType<typeof setTimeout>;
   return function (this: unknown, ...args: unknown[]) {
     clearTimeout(timeoutId);

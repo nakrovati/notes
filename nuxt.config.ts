@@ -1,8 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "@nuxt/eslint"],
   imports: {
     dirs: ["./services"],
   },
+  modules: ["@nuxt/ui", "@nuxt/eslint"],
 });

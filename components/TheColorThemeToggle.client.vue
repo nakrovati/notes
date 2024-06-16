@@ -4,16 +4,16 @@ const colorMode = useColorMode();
 const items = [
   [
     {
-      label: "Light",
       click: () => (colorMode.preference = "light"),
+      label: "Light",
     },
     {
-      label: "Dark",
       click: () => (colorMode.preference = "dark"),
+      label: "Dark",
     },
     {
-      label: "System",
       click: () => (colorMode.preference = "system"),
+      label: "System",
     },
   ],
 ];

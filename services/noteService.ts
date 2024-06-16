@@ -4,11 +4,11 @@ export class NoteService {
   async createNote(body: Pick<Note, "content" | "title">) {
     try {
       const note = await $fetch("/api/notes", {
-        method: "POST",
         body: {
-          title: body.title,
           content: body.content,
+          title: body.title,
         },
+        method: "POST",
       });
 
       return note;
@@ -38,8 +38,8 @@ export class NoteService {
   ) {
     try {
       await $fetch(`/api/notes/${noteId}`, {
-        method: "PATCH",
         body,
+        method: "PATCH",
       });
     } catch (error) {
       throw createError(error as Error);

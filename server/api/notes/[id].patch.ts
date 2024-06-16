@@ -1,8 +1,10 @@
 import { LibsqlError } from "@libsql/client";
 import { and, eq } from "drizzle-orm";
 
+import type { Note } from "~/config/db/schema";
+
 import { db } from "~/config/db";
-import { Note, notesTable } from "~/config/db/schema";
+import { notesTable } from "~/config/db/schema";
 
 type Body = Pick<Note, "content" | "isFavourite" | "isProtected" | "title">;
 
@@ -23,10 +25,10 @@ export default defineEventHandler(async (event) => {
     await db
       .update(notesTable)
       .set({
-        title: body.title,
         content: body.content,
-        isProtected: body.isProtected,
         isFavourite: body.isFavourite,
+        isProtected: body.isProtected,
+        title: body.title,
         updatedAt: new Date().toISOString(),
       })
       .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));

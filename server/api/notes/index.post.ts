@@ -8,12 +8,12 @@ import { type NewNote, notesTable } from "~/config/db/schema";
 const insertNote = db
   .insert(notesTable)
   .values({
+    content: sql.placeholder("content"),
+    createdAt: sql.placeholder("createdAt"),
     id: sql.placeholder("id"),
     title: sql.placeholder("title"),
-    content: sql.placeholder("content"),
-    userId: sql.placeholder("userId"),
-    createdAt: sql.placeholder("createdAt"),
     updatedAt: sql.placeholder("updatedAt"),
+    userId: sql.placeholder("userId"),
   })
   .prepare();
 
@@ -33,16 +33,16 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { title, content } = await readBody<Body>(event);
+    const { content, title } = await readBody<Body>(event);
     const currentTime = new Date().toISOString();
 
     const newNote: NewNote = {
+      content,
+      createdAt: currentTime,
       id: uuidv4(),
       title,
-      content,
-      userId,
-      createdAt: currentTime,
       updatedAt: currentTime,
+      userId,
     };
 
     await insertNote.execute({ ...newNote });

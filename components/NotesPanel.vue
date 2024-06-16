@@ -6,7 +6,7 @@ const user = useUser();
 
 const { data: notes } = await useFetch("/api/notes");
 
-const { sortType, sortOrder, sortedNotes, toggleSortOrder } = useSorting(
+const { sortOrder, sortType, sortedNotes, toggleSortOrder } = useSorting(
   notes as Ref<Note[]>,
 );
 </script>

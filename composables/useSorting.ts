@@ -32,5 +32,5 @@ export const useSorting = (notes: Ref<Note[]>) => {
     });
   });
 
-  return { sortType, sortOrder, sortedNotes, toggleSortOrder };
+  return { sortOrder, sortType, sortedNotes, toggleSortOrder };
 };

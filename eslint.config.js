@@ -9,17 +9,13 @@ export default withNuxt(
   eslintPluginUnicorn.configs["flat/recommended"],
   {
     rules: {
-      // Perfectionist
-      "perfectionist/sort-objects": "off",
-      "perfectionist/sort-jsx-props": "off",
-      "perfectionist/sort-vue-attributes": "off",
-      "perfectionist/sort-svelte-attributes": "off",
       "perfectionist/sort-astro-attributes": "off",
-
-      // Unicorn
+      "perfectionist/sort-jsx-props": "off",
+      "perfectionist/sort-svelte-attributes": "off",
+      "perfectionist/sort-vue-attributes": "off",
+      "unicorn/filename-case": "off",
       "unicorn/no-null": "off",
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/filename-case": "off",
     },
   },
   eslintConfigPrettier,

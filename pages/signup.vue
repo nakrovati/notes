@@ -47,18 +47,18 @@ const state = reactive({
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     await $fetch("/api/account/signup", {
-      method: "POST",
       body: event.data,
+      method: "POST",
     });
 
     await navigateTo("/");
   } catch (error) {
     if (error.data?.message.includes("Email already used")) {
-      form.value?.setErrors([{ path: "email", message: error.data?.message }]);
+      form.value?.setErrors([{ message: error.data?.message, path: "email" }]);
       return;
     }
 
-    errorToast.add({ title: error.data?.message, color: "red" });
+    errorToast.add({ color: "red", title: error.data?.message });
   }
 }
 </script>

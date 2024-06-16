@@ -6,15 +6,15 @@ import { notesTable } from "~/config/db/schema";
 
 const getNote = db
   .select({
-    id: notesTable.id,
-    title: notesTable.title,
-    content: notesTable.content,
     category: notesTable.category,
-    userId: notesTable.userId,
+    content: notesTable.content,
     createdAt: notesTable.createdAt,
-    updatedAt: notesTable.updatedAt,
-    isProtected: notesTable.isProtected,
+    id: notesTable.id,
     isFavourite: notesTable.isFavourite,
+    isProtected: notesTable.isProtected,
+    title: notesTable.title,
+    updatedAt: notesTable.updatedAt,
+    userId: notesTable.userId,
   })
   .from(notesTable)
   .where(eq(notesTable.id, sql.placeholder("id")))
@@ -32,8 +32,8 @@ export default defineEventHandler(async (event) => {
 
     if (notes.length === 0) {
       throw createError({
-        statusMessage: "Note not found",
         statusCode: 404,
+        statusMessage: "Note not found",
       });
     }
 

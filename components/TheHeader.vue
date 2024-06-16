@@ -14,16 +14,16 @@ async function handleLogout() {
 const items = [
   [
     {
+      disabled: true,
       label: "Account",
       slot: "account",
-      disabled: true,
     },
     {
       label: "Settings",
       to: "/settings",
     },
   ],
-  [{ label: "Logout", click: () => handleLogout() }],
+  [{ click: () => handleLogout(), label: "Logout" }],
 ];
 </script>
 

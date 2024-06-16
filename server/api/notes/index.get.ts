@@ -6,13 +6,13 @@ import { notesTable } from "~/config/db/schema";
 
 const getNotes = db
   .select({
+    category: notesTable.category,
+    content: notesTable.content,
+    createdAt: notesTable.createdAt,
     id: notesTable.id,
     title: notesTable.title,
-    content: notesTable.content,
-    category: notesTable.category,
-    userId: notesTable.userId,
-    createdAt: notesTable.createdAt,
     updatedAt: notesTable.updatedAt,
+    userId: notesTable.userId,
   })
   .from(notesTable)
   .where(eq(notesTable.userId, sql.placeholder("userId")))

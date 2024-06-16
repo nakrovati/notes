@@ -16,20 +16,20 @@ if (error.value) {
 }
 
 const noteSchema = objectAsync({
-  title: string(),
   content: string(),
+  title: string(),
 });
 
 type NoteSchema = Input<typeof noteSchema>;
 
 const noteState = reactive({
-  title: "",
   content: "",
+  title: "",
   updatedAt: "",
 });
 
-noteState.title = note.value?.title!;
-noteState.content = note.value?.content!;
+noteState.title = note.value?.title;
+noteState.content = note.value?.content;
 noteState.updatedAt = new Date().toISOString();
 
 async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
@@ -79,10 +79,10 @@ async function handleDeleteNote() {
 const deleteNoteItems = [
   [
     {
-      label: "Delete note",
       click: () => {
         handleDeleteNote();
       },
+      label: "Delete note",
     },
   ],
 ];
@@ -111,10 +111,10 @@ async function handleAddToFavourites() {
 const changeProtectionItems = [
   [
     {
-      label: "Change protection",
       click: () => {
         handleChangeProtection();
       },
+      label: "Change protection",
     },
   ],
 ];

@@ -7,8 +7,8 @@ import { userTable } from "~/config/db/schema";
 
 const getUser = db
   .select({
-    id: userTable.id,
     email: userTable.email,
+    id: userTable.id,
     password: userTable.password,
   })
   .from(userTable)

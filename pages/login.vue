@@ -32,18 +32,18 @@ const form = ref<Form<Schema>>();
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     await $fetch("/api/account/login", {
-      method: "POST",
       body: event.data,
+      method: "POST",
     });
 
     await navigateTo("/");
   } catch (error) {
     if (error.data?.message.includes("Incorrect username or password")) {
-      form.value?.setErrors([{ path: "email", message: error.data?.message }]);
+      form.value?.setErrors([{ message: error.data?.message, path: "email" }]);
       return;
     }
 
-    errorToast.add({ title: error.data?.message, color: "red" });
+    errorToast.add({ color: "red", title: error.data?.message });
   }
 }
 </script>
