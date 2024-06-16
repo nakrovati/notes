@@ -1,6 +1,6 @@
 import { LibsqlError } from "@libsql/client";
 import { sql } from "drizzle-orm";
-import { v4 as uuidv4 } from "uuid";
+import { uuidv7 } from "uuidv7";
 
 import { db } from "~/config/db";
 import { type NewNote, notesTable } from "~/config/db/schema";
@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
     const newNote: NewNote = {
       content,
       createdAt: currentTime,
-      id: uuidv4(),
+      id: uuidv7(),
       title,
       updatedAt: currentTime,
       userId,
