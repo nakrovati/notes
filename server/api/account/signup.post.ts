@@ -10,6 +10,7 @@ import { userTable } from "~/config/db/schema";
 const insertUser = db
   .insert(userTable)
   .values({
+    createdAt: sql.placeholder("createdAt"),
     email: sql.placeholder("email"),
     id: sql.placeholder("id"),
     password: sql.placeholder("password"),
@@ -51,6 +52,7 @@ export default defineEventHandler(async (event) => {
     const userId = generateId(15);
 
     await insertUser.execute({
+      createdAt: new Date().toISOString(),
       email: creditnails.email,
       id: userId,
       password: hashedPassword,

@@ -5,7 +5,9 @@ export default defineConfig({
     authToken: process.env.DB_AUTH_TOKEN!,
     url: process.env.DB_URL!,
   },
+  dialect: "sqlite",
   driver: "turso",
-  out: "./drizzle",
   schema: "./config/db/schema.ts",
+  strict: true,
+  verbose: true,
 });

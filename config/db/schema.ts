@@ -8,6 +8,7 @@ import {
 export const userTable = sqliteTable(
   "user",
   {
+    createdAt: text("created_at").notNull(),
     email: text("email").notNull(),
     id: text("id").primaryKey().notNull(),
     password: text("password").notNull(),
