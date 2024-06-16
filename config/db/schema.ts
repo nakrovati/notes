@@ -34,7 +34,6 @@ export const notesTable = sqliteTable("notes", {
   content: text("content").notNull(),
   createdAt: text("created_at").notNull(),
   id: text("id").primaryKey().notNull(),
-  isFavourite: integer("is_favourite").notNull().default(0),
   isProtected: integer("is_protected").notNull().default(1),
   title: text("title").notNull(),
   updatedAt: text("updated_at").notNull(),

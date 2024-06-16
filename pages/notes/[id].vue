@@ -10,7 +10,7 @@ const noteService = new NoteService();
 
 const noteId = route.params.id.toString();
 
-const { data: note, error, refresh } = await useFetch(`/api/notes/${noteId}`);
+const { data: note, error } = await useFetch(`/api/notes/${noteId}`);
 if (error.value) {
   throw createError(error.value);
 }
@@ -91,17 +91,6 @@ async function handleChangeProtection() {
   }
 }
 
-async function handleAddToFavourites() {
-  try {
-    await noteService.updateNote(noteId, {
-      isFavourite: +!note.value?.isFavourite,
-    });
-    await refresh();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 const changeProtectionItems = [
   [
     {
@@ -133,16 +122,6 @@ const changeProtectionItems = [
           />
 
           <template v-if="user?.id === note?.userId">
-            <UButton
-              variant="outline"
-              :icon="
-                note?.isFavourite
-                  ? 'i-heroicons-heart-solid'
-                  : 'i-heroicons-heart'
-              "
-              @click="handleAddToFavourites"
-            />
-
             <UTooltip
               :text="
                 isNoteSaved

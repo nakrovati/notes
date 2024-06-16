@@ -10,7 +10,6 @@ const getNote = db
     content: notesTable.content,
     createdAt: notesTable.createdAt,
     id: notesTable.id,
-    isFavourite: notesTable.isFavourite,
     isProtected: notesTable.isProtected,
     title: notesTable.title,
     updatedAt: notesTable.updatedAt,

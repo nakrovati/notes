@@ -6,7 +6,7 @@ import type { Note } from "~/config/db/schema";
 import { db } from "~/config/db";
 import { notesTable } from "~/config/db/schema";
 
-type Body = Pick<Note, "content" | "isFavourite" | "isProtected" | "title">;
+type Body = Pick<Note, "content" | "isProtected" | "title">;
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
@@ -26,7 +26,6 @@ export default defineEventHandler(async (event) => {
       .update(notesTable)
       .set({
         content: body.content,
-        isFavourite: body.isFavourite,
         isProtected: body.isProtected,
         title: body.title,
         updatedAt: new Date().toISOString(),
