@@ -2,10 +2,9 @@ import eslintConfigPrettier from "eslint-config-prettier";
 import perfectionistNatural from "eslint-plugin-perfectionist/configs/recommended-natural";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 
-import nuxt from "./.nuxt/eslint.config.mjs";
+import { withNuxt } from "./.nuxt/eslint.config.mjs";
 
-export default [
-  ...nuxt,
+export default withNuxt(
   perfectionistNatural,
   eslintPluginUnicorn.configs["flat/recommended"],
   {
@@ -24,4 +23,4 @@ export default [
     },
   },
   eslintConfigPrettier,
-];
+);
