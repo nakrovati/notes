@@ -26,6 +26,3 @@ logs
 
 # test db
 libsql.db
-
-# drizzle
-drizzle
