@@ -4,6 +4,8 @@ import { generateId } from "lucia";
 import { Argon2id } from "oslo/password";
 import * as v from "valibot";
 
+import type { NewUser } from "~/types";
+
 import { db } from "~/config/db";
 import { userTable } from "~/config/db/schema";
 
@@ -51,12 +53,14 @@ export default defineEventHandler(async (event) => {
     const hashedPassword = await new Argon2id().hash(creditnails.password);
     const userId = generateId(15);
 
-    await insertUser.execute({
+    const newUser: NewUser = {
       createdAt: new Date().toISOString(),
       email: creditnails.email,
       id: userId,
       password: hashedPassword,
-    });
+    };
+
+    await insertUser.execute(newUser);
 
     const session = await lucia.createSession(userId, {});
     appendHeader(

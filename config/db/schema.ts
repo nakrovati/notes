@@ -21,8 +21,6 @@ export const userTable = sqliteTable(
   },
 );
 
-export type User = typeof userTable.$inferSelect;
-
 export const sessionTable = sqliteTable("session", {
   expiresAt: integer("expires_at").notNull(),
   id: text("id").primaryKey().notNull(),
@@ -51,6 +49,3 @@ export const notesTable = sqliteTable(
     userIdIdx: index("user_id_idx").on(table.userId),
   }),
 );
-
-export type NewNote = typeof notesTable.$inferInsert;
-export type Note = typeof notesTable.$inferSelect;

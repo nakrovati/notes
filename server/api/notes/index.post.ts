@@ -2,8 +2,10 @@ import { LibsqlError } from "@libsql/client";
 import { sql } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
 
+import type { NewNote } from "~/types";
+
 import { db } from "~/config/db";
-import { type NewNote, notesTable } from "~/config/db/schema";
+import { notesTable } from "~/config/db/schema";
 
 const insertNote = db
   .insert(notesTable)
@@ -45,7 +47,7 @@ export default defineEventHandler(async (event) => {
       userId,
     };
 
-    await insertNote.execute({ ...newNote });
+    await insertNote.execute(newNote);
 
     return newNote;
   } catch (error) {
