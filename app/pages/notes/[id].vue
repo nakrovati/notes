@@ -1,26 +1,34 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "#ui/types";
 
-import { type Input, objectAsync, string } from "valibot";
+import * as v from "valibot";
 
 const route = useRoute();
 const user = useUser();
 
-const noteService = new NoteService();
-
-const noteId = route.params.id.toString();
-
-const { data: note, error } = await useFetch(`/api/notes/${noteId}`);
-if (error.value) {
-  throw createError(error.value);
+if (!route.params.id) {
+  throw createError({
+    message: "Note not found",
+    statusCode: 404,
+  });
 }
 
-const noteSchema = objectAsync({
-  content: string(),
-  title: string(),
+const noteService = new NoteService();
+
+const { data: note, error } = await useFetch(`/api/notes/${route.params.id}`);
+if (error.value || !note.value) {
+  throw createError({
+    message: "Note not found",
+    statusCode: 404,
+  });
+}
+
+const noteSchema = v.object({
+  content: v.string(),
+  title: v.string(),
 });
 
-type NoteSchema = Input<typeof noteSchema>;
+type NoteSchema = v.InferInput<typeof noteSchema>;
 
 const noteState = reactive({
   content: "",
@@ -28,15 +36,15 @@ const noteState = reactive({
   updatedAt: "",
 });
 
-noteState.title = note.value?.title;
-noteState.content = note.value?.content;
+noteState.title = note.value.title;
+noteState.content = note.value.content;
 noteState.updatedAt = new Date().toISOString();
 
 async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
-  if (!user.value || isNoteSaved.value) return;
+  if (!user.value || !note.value || isNoteSaved.value) return;
 
   try {
-    await noteService.updateNote(noteId, event.data);
+    await noteService.updateNote(note.value.id, event.data);
   } catch (error) {
     console.error(error);
   }
@@ -45,12 +53,12 @@ async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
 const isNoteSaved = ref(true);
 
 const debouncedAutoSaveNote = useDebounceFn(async () => {
-  if (!user.value) return;
+  if (!user.value || !note.value) return;
 
   isNoteSaved.value = false;
 
   try {
-    await noteService.updateNote(noteId, noteState);
+    await noteService.updateNote(note.value?.id, noteState);
 
     noteState.updatedAt = new Date().toISOString();
     isNoteSaved.value = true;
@@ -62,8 +70,10 @@ const debouncedAutoSaveNote = useDebounceFn(async () => {
 const isModalOpen = ref(false);
 
 async function handleDeleteNote() {
+  if (!user.value || !note.value) return;
+
   try {
-    await noteService.deleteNote(noteId);
+    await noteService.deleteNote(note.value.id);
     await navigateTo("/");
   } catch (error) {
     console.error(error);
@@ -82,8 +92,10 @@ const deleteNoteItems = [
 ];
 
 async function handleChangeProtection() {
+  if (user || !note.value) return;
+
   try {
-    await noteService.updateNote(noteId, {
+    await noteService.updateNote(note.value.id, {
       isProtected: +!note.value?.isProtected,
     });
   } catch (error) {

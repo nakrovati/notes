@@ -1,6 +1,6 @@
-import { type Session, type User, verifyRequestOrigin } from "lucia";
+import type { Session, User } from "lucia";
 
-import { lucia } from "../utils/auth";
+import { verifyRequestOrigin } from "lucia";
 
 export default defineEventHandler(async (event) => {
   if (event.method !== "GET") {
@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
       lucia.createSessionCookie(session.id).serialize(),
     );
   }
+
   if (!session) {
     appendResponseHeader(
       event,
@@ -37,6 +38,7 @@ export default defineEventHandler(async (event) => {
       lucia.createBlankSessionCookie().serialize(),
     );
   }
+
   event.context.session = session;
   event.context.user = user;
 });

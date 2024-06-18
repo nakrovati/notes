@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { Note } from "~/types";
+
 import { useSorting } from "~/composables/useSorting";
-import { type Note } from "~/config/db/schema";
 
 const user = useUser();
 

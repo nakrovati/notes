@@ -1,10 +1,9 @@
 import { LibsqlError } from "@libsql/client";
+import { db } from "~~/config/db";
+import { notesTable } from "~~/config/db/schema";
 import { and, eq } from "drizzle-orm";
 
-import type { Note } from "~/config/db/schema";
-
-import { db } from "~/config/db";
-import { notesTable } from "~/config/db/schema";
+import type { Note } from "~/types";
 
 type Body = Pick<Note, "content" | "isProtected" | "title">;
 

@@ -1,13 +1,12 @@
 import { LibsqlError } from "@libsql/client";
+import { db } from "~~/config/db";
+import { userTable } from "~~/config/db/schema";
 import { sql } from "drizzle-orm";
 import { generateId } from "lucia";
 import { Argon2id } from "oslo/password";
 import * as v from "valibot";
 
 import type { NewUser } from "~/types";
-
-import { db } from "~/config/db";
-import { userTable } from "~/config/db/schema";
 
 const insertUser = db
   .insert(userTable)

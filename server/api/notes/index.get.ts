@@ -1,19 +1,10 @@
 import { LibsqlError } from "@libsql/client";
+import { db } from "~~/config/db";
+import { notesTable } from "~~/config/db/schema";
 import { eq, sql } from "drizzle-orm";
 
-import { db } from "~/config/db";
-import { notesTable } from "~/config/db/schema";
-
 const getNotes = db
-  .select({
-    category: notesTable.category,
-    content: notesTable.content,
-    createdAt: notesTable.createdAt,
-    id: notesTable.id,
-    title: notesTable.title,
-    updatedAt: notesTable.updatedAt,
-    userId: notesTable.userId,
-  })
+  .select()
   .from(notesTable)
   .where(eq(notesTable.userId, sql.placeholder("userId")))
   .prepare();
@@ -29,11 +20,11 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const note = await getNotes.execute({
+    const notes = await getNotes.execute({
       userId,
     });
 
-    return note;
+    return notes;
   } catch (error) {
     if (error instanceof LibsqlError) {
       console.log(error);

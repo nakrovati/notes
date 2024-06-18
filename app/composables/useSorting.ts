@@ -1,6 +1,6 @@
 import { type Ref } from "vue";
 
-import type { Note } from "~/config/db/schema";
+import type { Note } from "~/types";
 
 export const useSorting = (notes: Ref<Note[]>) => {
   const sortOrder = ref<"asc" | "desc">("asc");

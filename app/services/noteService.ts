@@ -1,4 +1,4 @@
-import type { Note } from "~/config/db/schema";
+import type { Note } from "~/types";
 
 export class NoteService {
   async createNote(body: Pick<Note, "content" | "title">) {

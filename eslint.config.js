@@ -18,5 +18,11 @@ export default withNuxt(
       "unicorn/prevent-abbreviations": "off",
     },
   },
+  {
+    files: ["app/pages/**/*.vue"],
+    rules: {
+      "vue/multi-word-component-names": "off",
+    },
+  },
   eslintConfigPrettier,
 );

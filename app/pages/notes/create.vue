@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "#ui/types";
 
-import { type Input, objectAsync, string } from "valibot";
+import * as v from "valibot";
 
 definePageMeta({
   middleware: ["protected"],
@@ -9,12 +9,12 @@ definePageMeta({
 
 const noteService = new NoteService();
 
-const noteSchema = objectAsync({
-  content: string(),
-  title: string(),
+const noteSchema = v.object({
+  content: v.string(),
+  title: v.string(),
 });
 
-type NoteSchema = Input<typeof noteSchema>;
+type NoteSchema = v.InferInput<typeof noteSchema>;
 
 const noteState = reactive({
   content: "",

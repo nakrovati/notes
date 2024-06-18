@@ -1,10 +1,9 @@
 import { LibsqlError } from "@libsql/client";
+import { db } from "~~/config/db";
+import { userTable } from "~~/config/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { Argon2id } from "oslo/password";
 import * as v from "valibot";
-
-import { db } from "~/config/db";
-import { userTable } from "~/config/db/schema";
 
 const getUser = db
   .select({
@@ -39,7 +38,7 @@ export default defineEventHandler(async (event) => {
     const creditnails = v.parse(LoginSchema, body);
 
     const user = await getUser.execute({ email: creditnails.email });
-    if (user.length === 0) {
+    if (user.length === 0 || !user[0]) {
       return createError({
         data: {
           message: "Incorrect username or password",

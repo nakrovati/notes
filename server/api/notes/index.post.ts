@@ -1,11 +1,10 @@
 import { LibsqlError } from "@libsql/client";
+import { db } from "~~/config/db";
+import { notesTable } from "~~/config/db/schema";
 import { sql } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
 
 import type { NewNote } from "~/types";
-
-import { db } from "~/config/db";
-import { notesTable } from "~/config/db/schema";
 
 const insertNote = db
   .insert(notesTable)
