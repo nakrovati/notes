@@ -3,6 +3,19 @@
 #   Refer for explanation to following link:
 #   https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
 #
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      run: bunx nuxt typecheck
+    lint-code:
+      glob: "*.{js,ts,cjs,cts,jsx,tsx,vue}"
+      run: bunx eslint --fix {staged_files} && bunx prettier --write {staged_files}
+    format-docs:
+      glob: "*.{md,json,jsonc,yml,yaml,html}"
+      run: bunx prettier --write {staged_files}
+
 pre-commit:
   parallel: true
   commands:
