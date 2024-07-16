@@ -10,12 +10,7 @@ export const NoteUpdateSchema = v.object({
       v.transform((input) => sanitize(input)),
     ),
   ),
-  isProtected: v.optional(
-    v.pipe(
-      v.boolean(),
-      v.transform((input) => +input),
-    ),
-  ),
+  isProtected: v.optional(v.boolean()),
   title: v.optional(
     v.pipe(
       v.string(),

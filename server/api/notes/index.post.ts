@@ -19,14 +19,11 @@ export default defineEventHandler(async (event) => {
 
   try {
     const { content, title } = v.parse(NoteCreationSchema, body);
-    const now = new Date().toISOString();
 
     const newNote: NewNote = {
       content,
-      createdAt: now,
       id: uuidv7(),
       title,
-      updatedAt: now,
       userId: user.id,
     };
 
