@@ -1,36 +1,47 @@
 import { LibsqlError } from "@libsql/client";
-import { db } from "~~/config/db";
-import { notesTable } from "~~/config/db/schema";
-import { and, eq } from "drizzle-orm";
-
-import type { Note } from "~/types";
-
-type Body = Pick<Note, "content" | "isProtected" | "title">;
+import { noteRepository } from "~~/server/repositories/noteRepository";
+import { NoteUpdateSchema } from "~~/server/validators/noteValidator";
+import * as v from "valibot";
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
   const userId = event.context.session?.userId;
 
+  if (!noteId) {
+    throw createError({
+      message: "Note id is required",
+      statusCode: 400,
+    });
+  }
+
   if (!userId) {
     throw createError({
-      message: "User not authenticated",
       statusCode: 401,
     });
   }
 
-  try {
-    const body = await readBody<Body>(event);
+  const body = await readBody(event);
 
-    await db
-      .update(notesTable)
-      .set({
-        content: body.content,
-        isProtected: body.isProtected,
-        title: body.title,
-        updatedAt: new Date().toISOString(),
-      })
-      .where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId!)));
+  try {
+    const fields = v.parse(NoteUpdateSchema, body);
+    const now = new Date().toISOString();
+
+    await noteRepository.update(noteId, {
+      ...fields,
+      updatedAt: now,
+    });
+
+    setResponseStatus(event, 204);
   } catch (error) {
+    if (error instanceof v.ValiError) {
+      throw createError({
+        data: {
+          errors: v.flatten<typeof NoteUpdateSchema>(error.issues).nested,
+        },
+        statusCode: 400,
+      });
+    }
+
     if (error instanceof LibsqlError) {
       console.log(error);
     }

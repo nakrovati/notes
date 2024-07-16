@@ -1,27 +1,10 @@
 import { LibsqlError } from "@libsql/client";
-import { db } from "~~/config/db";
-import { notesTable } from "~~/config/db/schema";
-import { sql } from "drizzle-orm";
+import { noteRepository } from "~~/server/repositories/noteRepository";
+import { NoteCreationSchema } from "~~/server/validators/noteValidator";
 import { uuidv7 } from "uuidv7";
+import * as v from "valibot";
 
 import type { NewNote } from "~/types";
-
-const insertNote = db
-  .insert(notesTable)
-  .values({
-    content: sql.placeholder("content"),
-    createdAt: sql.placeholder("createdAt"),
-    id: sql.placeholder("id"),
-    title: sql.placeholder("title"),
-    updatedAt: sql.placeholder("updatedAt"),
-    userId: sql.placeholder("userId"),
-  })
-  .prepare();
-
-interface Body {
-  content: string;
-  title: string;
-}
 
 export default defineEventHandler(async (event) => {
   const userId = event.context.session?.userId;
@@ -33,23 +16,34 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const body = await readBody(event);
+
   try {
-    const { content, title } = await readBody<Body>(event);
-    const currentTime = new Date().toISOString();
+    const { content, title } = v.parse(NoteCreationSchema, body);
+    const now = new Date().toISOString();
 
     const newNote: NewNote = {
       content,
-      createdAt: currentTime,
+      createdAt: now,
       id: uuidv7(),
       title,
-      updatedAt: currentTime,
+      updatedAt: now,
       userId,
     };
 
-    await insertNote.execute(newNote);
+    await noteRepository.create(newNote);
 
     return newNote;
   } catch (error) {
+    if (error instanceof v.ValiError) {
+      throw createError({
+        data: {
+          errors: v.flatten<typeof NoteCreationSchema>(error.issues).nested,
+        },
+        statusCode: 400,
+      });
+    }
+
     if (error instanceof LibsqlError) {
       if (error.code === "SQLITE_CONSTRAINT_PRIMARYKEY") {
         throw createError({

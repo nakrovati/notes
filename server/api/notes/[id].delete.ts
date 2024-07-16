@@ -1,21 +1,16 @@
 import { LibsqlError } from "@libsql/client";
-import { db } from "~~/config/db";
-import { notesTable } from "~~/config/db/schema";
-import { and, eq, sql } from "drizzle-orm";
-
-const deleteNote = db
-  .delete(notesTable)
-  .where(
-    and(
-      eq(notesTable.userId, sql.placeholder("userId")),
-      eq(notesTable.id, sql.placeholder("id")),
-    ),
-  )
-  .prepare();
+import { noteRepository } from "~~/server/repositories/noteRepository";
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
   const userId = event.context.user?.id;
+
+  if (!noteId) {
+    throw createError({
+      message: "Note id is required",
+      statusCode: 400,
+    });
+  }
 
   if (!userId) {
     throw createError({
@@ -24,10 +19,25 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const deletedNote = await deleteNote.execute({ id: noteId, userId });
-    if (!deletedNote) {
+    const note = await noteRepository.getById(noteId);
+    if (!note) {
       throw createError({
-        message: "Note not found or user does not have permission",
+        message: "Note not found",
+        statusCode: 404,
+      });
+    }
+
+    if (note.userId !== userId) {
+      throw createError({
+        message: "You do not have permission to delete this note",
+        statusCode: 403,
+      });
+    }
+
+    const deletedRows = await noteRepository.delete(noteId);
+    if (!deletedRows) {
+      throw createError({
+        message: "Note not found",
         statusCode: 404,
       });
     }

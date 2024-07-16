@@ -1,13 +1,5 @@
 import { LibsqlError } from "@libsql/client";
-import { db } from "~~/config/db";
-import { userTable } from "~~/config/db/schema";
-import { and, eq, sql } from "drizzle-orm";
-
-const deleteUser = db
-  .delete(userTable)
-  .where(and(eq(userTable.id, sql.placeholder("id"))))
-  .returning()
-  .prepare();
+import { userRepository } from "~~/server/repositories/userRepository";
 
 export default eventHandler(async (event) => {
   try {
@@ -23,11 +15,10 @@ export default eventHandler(async (event) => {
       lucia.createBlankSessionCookie().serialize(),
     );
 
-    const deletedUsers = await deleteUser.execute({
-      id: event.context.session.userId,
-    });
-
-    if (deletedUsers.length === 0) {
+    const deletedRows = await userRepository.delete(
+      event.context.session.userId,
+    );
+    if (!deletedRows) {
       throw createError({
         message: "User not found",
         statusCode: 404,

@@ -1,53 +1,17 @@
 import { LibsqlError } from "@libsql/client";
-import { db } from "~~/config/db";
-import { userTable } from "~~/config/db/schema";
-import { sql } from "drizzle-orm";
+import { userRepository } from "~~/server/repositories/userRepository";
+import { SignUpSchema } from "~~/server/validators/userValidator";
 import { generateId } from "lucia";
 import { Argon2id } from "oslo/password";
 import * as v from "valibot";
 
 import type { NewUser } from "~/types";
 
-const insertUser = db
-  .insert(userTable)
-  .values({
-    createdAt: sql.placeholder("createdAt"),
-    email: sql.placeholder("email"),
-    id: sql.placeholder("id"),
-    password: sql.placeholder("password"),
-  })
-  .prepare();
-
-const SignupSchema = v.pipe(
-  v.object({
-    email: v.pipe(
-      v.string(),
-      v.nonEmpty("Email is required"),
-      v.maxLength(320, "Must be at most 320 characters"),
-      v.email("Invalid emial"),
-    ),
-    password: v.pipe(
-      v.string(),
-      v.nonEmpty("Password is required"),
-      v.minLength(8, "Must be at least 8 characters"),
-      v.maxLength(50, "Must be at most 50 characters"),
-    ),
-    password_confirmation: v.string(),
-  }),
-  v.forward(
-    v.check(
-      (input) => input.password === input.password_confirmation,
-      "Confirm password do not match",
-    ),
-    ["password_confirmation"],
-  ),
-);
-
 export default defineEventHandler(async (event) => {
-  try {
-    const body = await readBody(event);
+  const body = await readBody(event);
 
-    const creditnails = v.parse(SignupSchema, body);
+  try {
+    const creditnails = v.parse(SignUpSchema, body);
 
     const hashedPassword = await new Argon2id().hash(creditnails.password);
     const userId = generateId(15);
@@ -59,7 +23,7 @@ export default defineEventHandler(async (event) => {
       password: hashedPassword,
     };
 
-    await insertUser.execute(newUser);
+    await userRepository.create(newUser);
 
     const session = await lucia.createSession(userId, {});
     appendHeader(
@@ -71,7 +35,7 @@ export default defineEventHandler(async (event) => {
     if (error instanceof v.ValiError) {
       throw createError({
         data: {
-          errors: v.flatten(error.issues),
+          errors: v.flatten<typeof SignUpSchema>(error.issues).nested,
         },
         statusCode: 400,
       });

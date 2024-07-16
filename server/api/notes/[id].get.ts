@@ -1,36 +1,40 @@
 import { LibsqlError } from "@libsql/client";
-import { db } from "~~/config/db";
-import { notesTable } from "~~/config/db/schema";
-import { eq, sql } from "drizzle-orm";
-
-const getNote = db.query.notesTable
-  .findFirst({
-    where: eq(notesTable.id, sql.placeholder("id")),
-  })
-  .prepare();
+import { noteRepository } from "~~/server/repositories/noteRepository";
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
   const userId = event.context.session?.userId;
 
-  try {
-    const existingNote = await getNote.execute({ id: noteId });
+  if (!noteId) {
+    throw createError({
+      message: "Note id is required",
+      statusCode: 400,
+    });
+  }
 
-    if (!existingNote) {
+  if (!userId) {
+    throw createError({
+      statusCode: 401,
+    });
+  }
+
+  try {
+    const note = await noteRepository.getById(noteId);
+    if (!note) {
       throw createError({
         message: "Note not found",
         statusCode: 404,
       });
     }
 
-    if (existingNote.isProtected && existingNote.userId !== userId) {
+    if (note.isProtected && note.userId !== userId) {
       throw createError({
         message: "Note is protected",
         statusCode: 403,
       });
     }
 
-    return existingNote;
+    return note;
   } catch (error) {
     if (error instanceof LibsqlError) {
       console.log(error);

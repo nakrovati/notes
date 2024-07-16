@@ -1,44 +1,17 @@
 import { LibsqlError } from "@libsql/client";
-import { db } from "~~/config/db";
-import { userTable } from "~~/config/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { userRepository } from "~~/server/repositories/userRepository";
+import { LoginSchema } from "~~/server/validators/userValidator";
 import { Argon2id } from "oslo/password";
 import * as v from "valibot";
 
-const getUser = db
-  .select({
-    email: userTable.email,
-    id: userTable.id,
-    password: userTable.password,
-  })
-  .from(userTable)
-  .where(eq(userTable.email, sql.placeholder("email")))
-  .limit(1)
-  .prepare();
-
-const LoginSchema = v.object({
-  email: v.pipe(
-    v.string(),
-    v.nonEmpty("Email is required"),
-    v.maxLength(320, "Must be at most 320 characters"),
-    v.email("Invalid emial"),
-  ),
-  password: v.pipe(
-    v.string(),
-    v.nonEmpty("Password is required"),
-    v.minLength(8, "Must be at least 8 characters"),
-    v.maxLength(50, "Must be at most 50 characters"),
-  ),
-});
-
 export default defineEventHandler(async (event) => {
-  try {
-    const body = await readBody(event);
+  const body = await readBody(event);
 
+  try {
     const creditnails = v.parse(LoginSchema, body);
 
-    const user = await getUser.execute({ email: creditnails.email });
-    if (user.length === 0 || !user[0]) {
+    const user = await userRepository.getByEmail(creditnails.email);
+    if (!user) {
       return createError({
         data: {
           message: "Incorrect username or password",
@@ -48,7 +21,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const isPasswordValid = await new Argon2id().verify(
-      user[0].password,
+      user.password,
       creditnails.password,
     );
     if (!isPasswordValid) {
@@ -58,7 +31,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const session = await lucia.createSession(user[0].id, {});
+    const session = await lucia.createSession(user.id, {});
     appendHeader(
       event,
       "Set-Cookie",
