@@ -3,7 +3,7 @@ import { noteRepository } from "~~/server/repositories/noteRepository";
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
-  const userId = event.context.session?.userId;
+  const user = event.context.user;
 
   if (!noteId) {
     throw createError({
@@ -12,14 +12,14 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (!userId) {
+  if (!user) {
     throw createError({
       statusCode: 401,
     });
   }
 
   try {
-    const note = await noteRepository.getById(noteId);
+    const note = await noteRepository.findById(noteId);
     if (!note) {
       throw createError({
         message: "Note not found",
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    if (note.isProtected && note.userId !== userId) {
+    if (note.isProtected && note.userId !== user.id) {
       throw createError({
         message: "Note is protected",
         statusCode: 403,

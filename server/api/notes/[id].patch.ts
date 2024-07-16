@@ -5,18 +5,17 @@ import * as v from "valibot";
 
 export default defineEventHandler(async (event) => {
   const noteId = event.context.params?.id;
-  const userId = event.context.session?.userId;
+  const user = event.context.user;
+  if (!user) {
+    throw createError({
+      statusCode: 401,
+    });
+  }
 
   if (!noteId) {
     throw createError({
       message: "Note id is required",
       statusCode: 400,
-    });
-  }
-
-  if (!userId) {
-    throw createError({
-      statusCode: 401,
     });
   }
 

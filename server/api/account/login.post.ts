@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   try {
     const creditnails = v.parse(LoginSchema, body);
 
-    const user = await userRepository.getByEmail(creditnails.email);
+    const user = await userRepository.findByEmail(creditnails.email);
     if (!user) {
       return createError({
         data: {

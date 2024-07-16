@@ -21,7 +21,7 @@ class UserRepository {
     .where(eq(userTable.id, sql.placeholder("id")))
     .prepare();
 
-  #preparedGetByEmail = db.query.userTable
+  #preparedFindByEmail = db.query.userTable
     .findFirst({ where: eq(userTable.email, sql.placeholder("email")) })
     .prepare();
 
@@ -35,8 +35,8 @@ class UserRepository {
     return rowsAffected;
   }
 
-  async getByEmail(email: string): Promise<User | undefined> {
-    const user = await this.#preparedGetByEmail.execute({ email });
+  async findByEmail(email: string): Promise<User | undefined> {
+    const user = await this.#preparedFindByEmail.execute({ email });
     return user;
   }
 }

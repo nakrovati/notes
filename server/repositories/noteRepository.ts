@@ -23,11 +23,11 @@ class NoteRepository {
     .where(and(eq(notesTable.id, sql.placeholder("id"))))
     .prepare();
 
-  #preparedGetById = db.query.notesTable
+  #preparedFindById = db.query.notesTable
     .findFirst({ where: eq(notesTable.id, sql.placeholder("id")) })
     .prepare();
 
-  #preparedGetByUserId = db.query.notesTable
+  #preparedFindByUserId = db.query.notesTable
     .findMany({ where: eq(notesTable.userId, sql.placeholder("userId")) })
     .prepare();
 
@@ -41,13 +41,13 @@ class NoteRepository {
     return rowsAffected;
   }
 
-  async getById(id: string): Promise<Note | undefined> {
-    const note = await this.#preparedGetById.execute({ id });
+  async findById(id: string): Promise<Note | undefined> {
+    const note = await this.#preparedFindById.execute({ id });
     return note;
   }
 
-  async getByUserId(userId: string): Promise<Note[]> {
-    const notes = await this.#preparedGetByUserId.execute({ userId });
+  async findByUserId(userId: string): Promise<Note[]> {
+    const notes = await this.#preparedFindByUserId.execute({ userId });
     return notes;
   }
 

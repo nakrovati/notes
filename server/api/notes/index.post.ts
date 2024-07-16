@@ -7,9 +7,8 @@ import * as v from "valibot";
 import type { NewNote } from "~/types";
 
 export default defineEventHandler(async (event) => {
-  const userId = event.context.session?.userId;
-
-  if (!userId) {
+  const user = event.context.user;
+  if (!user) {
     throw createError({
       message: "User not authenticated",
       statusCode: 401,
@@ -28,12 +27,12 @@ export default defineEventHandler(async (event) => {
       id: uuidv7(),
       title,
       updatedAt: now,
-      userId,
+      userId: user.id,
     };
 
-    await noteRepository.create(newNote);
+    const createdNote = await noteRepository.create(newNote);
 
-    return newNote;
+    return createdNote;
   } catch (error) {
     if (error instanceof v.ValiError) {
       throw createError({
