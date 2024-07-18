@@ -11,8 +11,9 @@
     "typecheck": "nuxt typecheck",
     "format": "prettier -w .",
     "lint": "eslint .",
-    "db:generate": "drizzle-kit generate:sqlite",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run ./config/db/migrate.ts",
+    "db:migrate-prod": "drizzle-kit migrate",
     "prepare": "lefthook install"
   },
   "dependencies": {
@@ -40,6 +41,7 @@
     "lucia": "^3.2.0",
     "oslo": "^1.2.0",
     "prettier": "^3.3.2",
-    "prettier-plugin-tailwindcss": "^0.6.4"
+    "prettier-plugin-tailwindcss": "^0.6.4",
+    "vue-tsc": "^2.0.26"
   }
 }

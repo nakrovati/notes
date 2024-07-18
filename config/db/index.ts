@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/libsql";
 
 import * as schema from "./schema";
 
-const config: Config =
+export const config: Config =
   process.env.NODE_ENV === "production"
     ? {
         authToken: process.env.DB_AUTH_TOKEN!,

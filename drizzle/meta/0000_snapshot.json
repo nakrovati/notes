@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "ed72d077-4a88-4b2c-8899-55b9ac13c8a6",
+  "id": "e80d63c2-ff2f-49c5-b309-f93960545581",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "notes": {
@@ -26,7 +26,8 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
         },
         "id": {
           "name": "id",
@@ -41,7 +42,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 1
+          "default": true
         },
         "title": {
           "name": "title",
@@ -55,7 +56,8 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
         },
         "user_id": {
           "name": "user_id",
@@ -128,7 +130,8 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
         },
         "email": {
           "name": "email",
@@ -150,11 +153,19 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
         }
       },
       "indexes": {
-        "unique_email": {
-          "name": "unique_email",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "columns": ["email"],
           "isUnique": true
         }
