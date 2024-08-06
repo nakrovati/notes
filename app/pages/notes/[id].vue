@@ -96,7 +96,7 @@ async function handleChangeProtection() {
 
   try {
     await noteService.updateNote(note.value.id, {
-      isProtected: +!note.value?.isProtected,
+      isProtected: note.value?.isProtected,
     });
   } catch (error) {
     console.error(error);

@@ -8,7 +8,6 @@ class UserRepository {
   #preparedCreate = db
     .insert(userTable)
     .values({
-      createdAt: sql.placeholder("createdAt"),
       email: sql.placeholder("email"),
       id: sql.placeholder("id"),
       password: sql.placeholder("password"),

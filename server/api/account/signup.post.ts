@@ -17,7 +17,6 @@ export default defineEventHandler(async (event) => {
     const userId = generateId(15);
 
     const newUser: NewUser = {
-      createdAt: new Date().toISOString(),
       email: creditnails.email,
       id: userId,
       password: hashedPassword,

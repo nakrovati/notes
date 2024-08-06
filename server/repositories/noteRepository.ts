@@ -9,10 +9,8 @@ class NoteRepository {
     .insert(notesTable)
     .values({
       content: sql.placeholder("content"),
-      createdAt: sql.placeholder("createdAt"),
       id: sql.placeholder("id"),
       title: sql.placeholder("title"),
-      updatedAt: sql.placeholder("updatedAt"),
       userId: sql.placeholder("userId"),
     })
     .returning()
