@@ -1,7 +1,7 @@
 import { LibsqlError } from "@libsql/client";
+import { verify } from "@node-rs/argon2";
 import { userRepository } from "~~/server/repositories/userRepository";
 import { LoginSchema } from "~~/server/validators/userValidator";
-import { Argon2id } from "oslo/password";
 import * as v from "valibot";
 
 export default defineEventHandler(async (event) => {
@@ -9,8 +9,9 @@ export default defineEventHandler(async (event) => {
 
   try {
     const creditnails = v.parse(LoginSchema, body);
+    const { email, password } = creditnails;
 
-    const user = await userRepository.findByEmail(creditnails.email);
+    const user = await userRepository.findByEmail(email);
     if (!user) {
       return createError({
         data: {
@@ -20,10 +21,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const isPasswordValid = await new Argon2id().verify(
-      user.password,
-      creditnails.password,
-    );
+    const isPasswordValid = await verify(user.password, password);
     if (!isPasswordValid) {
       return createError({
         message: "Incorrect username or password",

@@ -1,8 +1,8 @@
 import { LibsqlError } from "@libsql/client";
+import { hash } from "@node-rs/argon2";
 import { userRepository } from "~~/server/repositories/userRepository";
 import { SignUpSchema } from "~~/server/validators/userValidator";
-import { generateId } from "lucia";
-import { Argon2id } from "oslo/password";
+import { generateIdFromEntropySize } from "lucia";
 import * as v from "valibot";
 
 import type { NewUser } from "~/types";
@@ -12,12 +12,15 @@ export default defineEventHandler(async (event) => {
 
   try {
     const creditnails = v.parse(SignUpSchema, body);
+    const { email, password } = creditnails;
 
-    const hashedPassword = await new Argon2id().hash(creditnails.password);
-    const userId = generateId(15);
+    const hashedPassword = await hash(password, {
+      memoryCost: 4096 * 5, // 5MB
+    });
+    const userId = generateIdFromEntropySize(10);
 
     const newUser: NewUser = {
-      email: creditnails.email,
+      email,
       id: userId,
       password: hashedPassword,
     };
