@@ -27,13 +27,13 @@
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
-    "@libsql/client": "^0.7.0",
+    "@libsql/client": "^0.8.1",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "@nuxt/eslint": "^0.3.13",
     "@nuxt/ui": "^2.18.4",
     "@types/sanitize-html": "^2.11.0",
     "drizzle-kit": "^0.22.8",
-    "drizzle-orm": "^0.31.4",
+    "drizzle-orm": "^0.32.2",
     "eslint": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-perfectionist": "^2.11.0",

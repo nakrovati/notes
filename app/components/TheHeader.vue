@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const route = useRoute();
+
 const user = useUser();
 
 async function handleLogout() {
@@ -36,7 +38,7 @@ const items = [
         constrained: 'max-w-full',
       }"
     >
-      <NuxtLink v-if="$route.path !== '/'" to="/">Notes</NuxtLink>
+      <NuxtLink v-if="route.path !== '/'" to="/">Notes</NuxtLink>
       <div v-else>Notes</div>
 
       <div class="flex items-center gap-2">

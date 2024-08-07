@@ -24,7 +24,7 @@ class UserRepository {
     .findFirst({ where: eq(userTable.email, sql.placeholder("email")) })
     .prepare();
 
-  async create(user: NewUser): Promise<User> {
+  async create(user: NewUser) {
     const [createdUser] = await this.#preparedCreate.execute(user);
     return createdUser;
   }

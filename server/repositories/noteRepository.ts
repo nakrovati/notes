@@ -29,7 +29,7 @@ class NoteRepository {
     .findMany({ where: eq(notesTable.userId, sql.placeholder("userId")) })
     .prepare();
 
-  async create(note: NewNote): Promise<Note> {
+  async create(note: NewNote) {
     const [createdNote] = await this.#preparedCreate.execute(note);
     return createdNote;
   }
@@ -54,7 +54,7 @@ class NoteRepository {
     fields: Partial<
       Pick<Note, "content" | "isProtected" | "title" | "updatedAt">
     >,
-  ): Promise<Note> {
+  ) {
     const [updatedNote] = await db
       .update(notesTable)
       .set(fields)
