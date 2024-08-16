@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "#ui/types";
 
+import { useDebounceFn } from "@vueuse/core";
 import * as v from "valibot";
 
 const route = useRoute();
@@ -40,7 +41,7 @@ noteState.title = note.value.title;
 noteState.content = note.value.content;
 noteState.updatedAt = new Date().toISOString();
 
-async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
+async function onSubmitSaveNote(event: FormSubmitEvent<NoteSchema>) {
   if (!user.value || !note.value || isNoteSaved.value) return;
 
   try {
@@ -50,22 +51,31 @@ async function handleSaveNote(event: FormSubmitEvent<NoteSchema>) {
   }
 }
 
-const isNoteSaved = ref(true);
-
-const debouncedAutoSaveNote = useDebounceFn(async () => {
+async function saveNote() {
   if (!user.value || !note.value) return;
 
-  isNoteSaved.value = false;
-
   try {
-    await noteService.updateNote(note.value?.id, noteState);
-
-    noteState.updatedAt = new Date().toISOString();
-    isNoteSaved.value = true;
+    await noteService.updateNote(note.value.id, noteState);
   } catch (error) {
     console.error(error);
   }
-}, 3000);
+}
+
+const isNoteSaved = ref(true);
+
+const debouncedSaveNote = useDebounceFn(saveNote, 3000);
+
+async function onChangeSaveNote() {
+  try {
+    isNoteSaved.value = false;
+
+    await debouncedSaveNote();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isNoteSaved.value = true;
+  }
+}
 
 const isModalOpen = ref(false);
 
@@ -121,7 +131,7 @@ const changeProtectionItems = [
       :schema="noteSchema"
       :state="noteState"
       class="space-y-4"
-      @submit="handleSaveNote"
+      @submit="onSubmitSaveNote"
     >
       <UFormGroup name="title">
         <div class="flex gap-4">
@@ -130,7 +140,7 @@ const changeProtectionItems = [
             placeholder="Note title"
             :disabled="!user?.id"
             :ui="{ wrapper: 'w-full' }"
-            @update:model-value="debouncedAutoSaveNote"
+            @update:model-value="onChangeSaveNote"
           />
 
           <template v-if="user?.id === note?.userId">
@@ -168,7 +178,7 @@ const changeProtectionItems = [
           :rows="10"
           :disabled="!user?.id"
           :maxrows="20"
-          @update:model-value="debouncedAutoSaveNote"
+          @update:model-value="onChangeSaveNote"
         />
       </UFormGroup>
 
